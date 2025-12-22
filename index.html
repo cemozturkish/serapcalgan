@@ -6,7 +6,11 @@
   <title>Serap Calgan</title>
 
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -49,7 +53,6 @@
       color: #fff;
     }
 
-    /* Optional: gallery section stays non-clickable */
     section {
       padding: 2rem;
       max-width: 1200px;
@@ -62,9 +65,11 @@
       gap: 1.25rem;
     }
 
-    .placeholder {
-      background: #f2f2f2;
-      aspect-ratio: 3 / 4;
+    .grid img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: cover;
     }
 
     footer {
@@ -77,29 +82,27 @@
 </head>
 
 <body>
+
   <header>
     <h1>Serap Calgan</h1>
 
-    <!-- Replace this link with your actual booking link -->
+    <!-- Replace with real booking link when ready -->
     <a class="book" href="https://example.com/booking" target="_blank" rel="noopener noreferrer">
       BOOK
     </a>
   </header>
 
-  <!-- Keep this if you want a simple gallery below; nothing is clickable -->
   <section aria-label="Gallery">
     <div class="grid">
-      <div class="placeholder"></div>
-      <div class="placeholder"></div>
-      <div class="placeholder"></div>
-      <div class="placeholder"></div>
-      <div class="placeholder"></div>
-      <div class="placeholder"></div>
+      <img src="assets/hair1.jpg" alt="Hair work 1">
+      <img src="assets/hair2.jpg" alt="Hair work 2">
+      <img src="assets/hair3.jpg" alt="Hair work 3">
     </div>
   </section>
 
   <footer>
     © 2025 Serap Calgan
   </footer>
+
 </body>
 </html>
