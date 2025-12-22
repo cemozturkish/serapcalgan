@@ -6,11 +6,7 @@
   <title>Serap Calgan</title>
 
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -19,57 +15,87 @@
       line-height: 1.6;
     }
 
+    /* HERO */
     header {
-      min-height: 60vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 4rem 2rem 2rem;
+      /* Was 60vh which created a big “empty sky”. */
+      padding: clamp(2.5rem, 6vw, 4rem) 2rem clamp(1.25rem, 3vw, 2rem);
       text-align: center;
     }
 
     h1 {
-      font-size: 2.6rem;
-      font-weight: 600;
-      letter-spacing: 0.06em;
+      font-size: clamp(2rem, 4vw, 2.75rem);
+      font-weight: 700;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
     }
 
     .book {
-      margin-top: 2rem;
-      font-size: 1rem;
-      letter-spacing: 0.2em;
+      display: inline-block;
+      margin-top: 1.25rem;
+      font-size: 0.95rem;
+      letter-spacing: 0.22em;
       text-transform: uppercase;
       text-decoration: none;
       color: #000;
       border: 1px solid #000;
-      padding: 0.9rem 1.4rem;
-      transition: background 0.15s ease, color 0.15s ease;
+      padding: 0.85rem 1.35rem;
+      transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
+      will-change: transform;
     }
 
     .book:hover {
       background: #000;
       color: #fff;
+      transform: translateY(-1px);
     }
 
-    section {
-      padding: 2rem;
+    /* GALLERY WRAP */
+    main {
+      padding: 0 2rem 4rem;
       max-width: 1200px;
-      margin: 0 auto 4rem;
+      margin: 0 auto;
+    }
+
+    /* Pull gallery up closer to hero */
+    .gallery {
+      margin-top: clamp(1rem, 3vw, 2rem);
     }
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 1.25rem;
+      gap: clamp(1rem, 2vw, 1.5rem);
+
+      /* Better scaling than minmax(240px...) for big screens */
+      grid-template-columns: repeat(3, 1fr);
     }
 
-    .grid img {
+    /* Responsive: stack on smaller screens */
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 600px) {
+      main { padding: 0 1.25rem 3rem; }
+      .grid { grid-template-columns: 1fr; }
+    }
+
+    /* Image cards */
+    figure {
+      margin: 0;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #f2f2f2;
+    }
+
+    figure img {
       width: 100%;
-      height: auto;
+      height: 100%;
       display: block;
+
+      /* This gives you consistent “editorial crop” without distortion */
       object-fit: cover;
+
+      /* Portrait-friendly height */
+      aspect-ratio: 3 / 4;
     }
 
     footer {
@@ -82,7 +108,6 @@
 </head>
 
 <body>
-
   <header>
     <h1>Serap Calgan</h1>
 
@@ -92,17 +117,18 @@
     </a>
   </header>
 
-  <section aria-label="Gallery">
-    <div class="grid">
-      <img src="assets/hair1.jpg" alt="Hair work 1">
-      <img src="assets/hair2.jpg" alt="Hair work 2">
-      <img src="assets/hair3.jpg" alt="Hair work 3">
-    </div>
-  </section>
+  <main>
+    <section class="gallery" aria-label="Gallery">
+      <div class="grid">
+        <figure><img src="assets/hair1.jpg" alt="Hair work 1"></figure>
+        <figure><img src="assets/hair2.jpg" alt="Hair work 2"></figure>
+        <figure><img src="assets/hair3.jpg" alt="Hair work 3"></figure>
+      </div>
+    </section>
+  </main>
 
   <footer>
     © 2025 Serap Calgan
   </footer>
-
 </body>
 </html>
