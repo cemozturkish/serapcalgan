@@ -8,13 +8,23 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
+    :root{
+      --bg: #f3f1ec;
+      --text: #302212;
+      --muted: rgba(48,34,18,0.65);
+      --line: rgba(48,34,18,0.15);
+      --line-strong: rgba(48,34,18,0.25);
+      --chip: rgba(48,34,18,0.06);
+      --chip-strong: rgba(48,34,18,0.10);
+    }
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
-      background: #f3f1ec;
-      color: #302212;
+      background: var(--bg);
+      color: var(--text);
       line-height: 1.6;
 
-      /* KEY PART */
+      /* keep footer in consistent place */
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -36,43 +46,142 @@
       color: inherit;
       text-decoration: none;
     }
+    h1 a:hover { opacity: 0.8; }
 
-    h1 a:hover {
-      opacity: 0.8;
-    }
-
-    /* MAIN takes flexible space but doesn't push footer */
     main {
       max-width: 520px;
       margin: 0 auto;
       padding: 1rem 2rem 0;
-      flex: 1; /* this keeps footer position consistent */
+      flex: 1; /* keeps footer position stable */
       display: flex;
-      align-items: flex-start;
       justify-content: center;
+      align-items: flex-start;
+      width: 100%;
+    }
+
+    .calendar-wrap {
+      width: 100%;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      padding: 1.2rem 0;
     }
 
     .calendar {
       width: 100%;
-      border-top: 1px solid rgba(48,34,18,0.15);
-      border-bottom: 1px solid rgba(48,34,18,0.15);
-      padding: 1.2rem 0;
+      border: 1px solid var(--line-strong);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.25);
+      overflow: hidden;
+      backdrop-filter: blur(2px);
     }
 
-    input[type="date"] {
-      width: 100%;
-      font-size: 1rem;
-      font-family: inherit;
-      color: #302212;
+    .cal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.85rem 0.9rem;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,0.18);
+    }
+
+    .month {
+      font-size: 0.92rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text);
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    .nav {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn {
+      appearance: none;
+      border: 1px solid var(--line-strong);
       background: transparent;
-      border: 1px solid rgba(48,34,18,0.25);
+      color: var(--text);
       border-radius: 10px;
-      padding: 0.75rem 0.85rem;
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      transition: background 0.15s ease, border-color 0.15s ease, transform 0.05s ease;
+      user-select: none;
     }
 
-    input[type="date"]:focus {
-      outline: none;
-      border-color: rgba(48,34,18,0.6);
+    .btn:hover {
+      background: var(--chip);
+      border-color: rgba(48,34,18,0.35);
+    }
+    .btn:active { transform: scale(0.98); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+      padding: 0.85rem 0.9rem 0.95rem;
+    }
+
+    .dow {
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-align: center;
+      padding: 0.25rem 0;
+      user-select: none;
+    }
+
+    .day {
+      height: 44px;
+      border-radius: 10px;
+      border: 1px solid transparent;
+      background: transparent;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      color: var(--text);
+      font-size: 0.95rem;
+      user-select: none;
+      transition: background 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+    }
+
+    .day:hover {
+      background: var(--chip);
+      border-color: rgba(48,34,18,0.18);
+    }
+
+    .day.is-outside {
+      opacity: 0.35;
+    }
+
+    .day.is-disabled {
+      opacity: 0.25;
+      cursor: not-allowed;
+      background: transparent;
+      border-color: transparent;
+    }
+    .day.is-disabled:hover {
+      background: transparent;
+      border-color: transparent;
+    }
+
+    .day.is-selected {
+      background: rgba(48,34,18,0.12);
+      border-color: rgba(48,34,18,0.35);
+    }
+
+    .selected-line {
+      margin-top: 0.75rem;
+      font-size: 0.85rem;
+      color: rgba(48,34,18,0.8);
+      letter-spacing: 0.02em;
+      text-align: center;
+      min-height: 1.2em;
     }
 
     footer {
@@ -85,24 +194,182 @@
 </head>
 
 <body>
-
   <header>
     <h1><a href="/index.html">Serap Calgan</a></h1>
   </header>
 
   <main>
-    <section class="calendar">
-      <input
-        type="date"
-        min="2026-01-20"
-        aria-label="Select appointment date"
-      />
+    <section class="calendar-wrap" aria-label="Booking calendar">
+      <div class="calendar" id="calendar">
+        <div class="cal-header">
+          <div class="nav">
+            <button class="btn" id="prev" aria-label="Previous month">‹</button>
+          </div>
+
+          <div class="month" id="monthLabel">Month YYYY</div>
+
+          <div class="nav">
+            <button class="btn" id="next" aria-label="Next month">›</button>
+          </div>
+        </div>
+
+        <div class="grid" id="dowRow" aria-hidden="true"></div>
+        <div class="grid" id="daysGrid"></div>
+      </div>
+
+      <div class="selected-line" id="selectedLine"></div>
     </section>
   </main>
 
-  <footer>
-    © 1989 Serap Kuaför
-  </footer>
+  <footer>© 1989 Serap Kuaför</footer>
 
+  <script>
+    (function () {
+      // Booking becomes available from this date onward:
+      const MIN_DATE = new Date("2026-01-20T00:00:00");
+      // Start the calendar on the month containing MIN_DATE (or current month if later).
+      const today = new Date();
+      today.setHours(0,0,0,0);
+
+      const startMonth = new Date(Math.max(today.getTime(), MIN_DATE.getTime()));
+      const view = new Date(startMonth.getFullYear(), startMonth.getMonth(), 1);
+
+      const monthLabel = document.getElementById("monthLabel");
+      const daysGrid = document.getElementById("daysGrid");
+      const dowRow = document.getElementById("dowRow");
+      const selectedLine = document.getElementById("selectedLine");
+      const prevBtn = document.getElementById("prev");
+      const nextBtn = document.getElementById("next");
+
+      const DOW = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+      // Render weekday header once
+      dowRow.innerHTML = "";
+      for (const d of DOW) {
+        const el = document.createElement("div");
+        el.className = "dow";
+        el.textContent = d;
+        dowRow.appendChild(el);
+      }
+
+      let selected = null;
+
+      function formatMonth(d) {
+        return d.toLocaleDateString(undefined, { month: "long", year: "numeric" });
+      }
+
+      // Convert JS Sunday-first to Monday-first index
+      function mondayFirstIndex(jsDay) {
+        // JS: Sun=0..Sat=6 -> Mon=0..Sun=6
+        return (jsDay + 6) % 7;
+      }
+
+      function isSameDay(a, b) {
+        return a && b &&
+          a.getFullYear() === b.getFullYear() &&
+          a.getMonth() === b.getMonth() &&
+          a.getDate() === b.getDate();
+      }
+
+      function isBeforeMin(d) {
+        return d.getTime() < MIN_DATE.getTime();
+      }
+
+      function render() {
+        monthLabel.textContent = formatMonth(view);
+
+        // First day of month
+        const first = new Date(view.getFullYear(), view.getMonth(), 1);
+        const firstIndex = mondayFirstIndex(first.getDay());
+
+        // Days in month
+        const last = new Date(view.getFullYear(), view.getMonth() + 1, 0);
+        const daysInMonth = last.getDate();
+
+        // Previous month days (for leading blanks)
+        const prevLast = new Date(view.getFullYear(), view.getMonth(), 0);
+        const prevDays = prevLast.getDate();
+
+        daysGrid.innerHTML = "";
+
+        // Build 6 weeks (42 cells) for stable layout
+        for (let i = 0; i < 42; i++) {
+          const cell = document.createElement("button");
+          cell.type = "button";
+          cell.className = "day";
+
+          let date;
+          let dayNum;
+          let outside = false;
+
+          if (i < firstIndex) {
+            // From previous month
+            dayNum = prevDays - (firstIndex - 1 - i);
+            date = new Date(view.getFullYear(), view.getMonth() - 1, dayNum);
+            outside = true;
+          } else if (i >= firstIndex + daysInMonth) {
+            // From next month
+            dayNum = i - (firstIndex + daysInMonth) + 1;
+            date = new Date(view.getFullYear(), view.getMonth() + 1, dayNum);
+            outside = true;
+          } else {
+            // Current month
+            dayNum = i - firstIndex + 1;
+            date = new Date(view.getFullYear(), view.getMonth(), dayNum);
+          }
+
+          cell.textContent = dayNum;
+
+          if (outside) cell.classList.add("is-outside");
+
+          // Disable before MIN_DATE
+          const disabled = isBeforeMin(date);
+          if (disabled) {
+            cell.classList.add("is-disabled");
+            cell.disabled = true;
+          }
+
+          if (selected && isSameDay(date, selected)) {
+            cell.classList.add("is-selected");
+          }
+
+          cell.addEventListener("click", () => {
+            if (isBeforeMin(date)) return;
+            selected = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+            selectedLine.textContent = selected.toLocaleDateString(undefined, {
+              weekday: "long", year: "numeric", month: "long", day: "numeric"
+            });
+            render();
+          });
+
+          daysGrid.appendChild(cell);
+        }
+
+        // Disable prev if it would go earlier than MIN_DATE month
+        const prevMonth = new Date(view.getFullYear(), view.getMonth() - 1, 1);
+        const minMonth = new Date(MIN_DATE.getFullYear(), MIN_DATE.getMonth(), 1);
+        prevBtn.disabled = prevMonth.getTime() < minMonth.getTime();
+        prevBtn.style.opacity = prevBtn.disabled ? "0.35" : "1";
+        prevBtn.style.cursor = prevBtn.disabled ? "not-allowed" : "pointer";
+
+        if (!selectedLine.textContent) {
+          selectedLine.textContent = ""; // keep minimal, no extra text
+        }
+      }
+
+      prevBtn.addEventListener("click", () => {
+        if (prevBtn.disabled) return;
+        view.setMonth(view.getMonth() - 1);
+        render();
+      });
+
+      nextBtn.addEventListener("click", () => {
+        view.setMonth(view.getMonth() + 1);
+        render();
+      });
+
+      render();
+    })();
+  </script>
 </body>
 </html>
