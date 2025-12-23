@@ -80,19 +80,20 @@
       padding-right: 1.1rem;
     }
 
-    /* CARD — fixed height, no cropping */
+    /* IMAGE HOLDER — invisible, structural only */
     .item {
       flex: 0 0 auto;
       width: clamp(170px, 22vw, 240px);
-      height: 360px;              /* uniform height */
-      border-radius: 14px;
-      overflow: hidden;
-      background: #ffffff;
-      border: 1px solid #ededed;
+      height: 360px;
 
       display: flex;
-      align-items: center;        /* vertical centering */
-      justify-content: center;    /* horizontal centering */
+      align-items: center;
+      justify-content: center;
+
+      background: none;
+      border: none;
+      border-radius: 10px;   /* slightly reduced, editorial */
+      overflow: hidden;
     }
 
     .item img {
@@ -103,7 +104,7 @@
       display: block;
     }
 
-    /* Move exactly one full track width */
+    /* Seamless loop */
     @keyframes marquee {
       from { transform: translateX(0); }
       to   { transform: translateX(-50%); }
