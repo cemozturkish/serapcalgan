@@ -10,8 +10,8 @@
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
-      background: #ffffff;
-      color: #000000;
+      background: #e8e9eb;
+      color: #302212;
       line-height: 1.6;
       overflow-x: hidden;
     }
@@ -36,15 +36,15 @@
       letter-spacing: 0.22em;
       text-transform: uppercase;
       text-decoration: none;
-      color: #000;
-      border: 1px solid #000;
+      color: #302212;
+      border: 1px solid #302212;
       padding: 0.5rem 0.95rem;
       transition: background 0.15s ease, color 0.15s ease;
     }
 
     .book:hover {
-      background: #000;
-      color: #fff;
+      background: #302212;
+      color: #e8e9eb;
     }
 
     /* FULL-BLEED GALLERY */
@@ -56,13 +56,12 @@
 
     .carousel {
       overflow: hidden;
-      background: #f6f6f6;
-      border-top: 1px solid #ededed;
-      border-bottom: 1px solid #ededed;
+      background: transparent;
+      border-top: 1px solid rgba(48,34,18,0.15);
+      border-bottom: 1px solid rgba(48,34,18,0.15);
       padding: 1rem 0;
     }
 
-    /* Moving container */
     .marquee {
       display: flex;
       width: max-content;
@@ -73,26 +72,22 @@
       animation-play-state: paused;
     }
 
-    /* Each full copy */
     .track {
       display: flex;
       gap: 1.1rem;
       padding-right: 1.1rem;
     }
 
-    /* IMAGE HOLDER — invisible, structural only */
     .item {
       flex: 0 0 auto;
       width: clamp(170px, 22vw, 240px);
       height: 360px;
-
       display: flex;
       align-items: center;
       justify-content: center;
-
       background: none;
       border: none;
-      border-radius: 10px;   /* slightly reduced, editorial */
+      border-radius: 10px;
       overflow: hidden;
     }
 
@@ -104,7 +99,6 @@
       display: block;
     }
 
-    /* Seamless loop */
     @keyframes marquee {
       from { transform: translateX(0); }
       to   { transform: translateX(-50%); }
@@ -114,10 +108,9 @@
       padding: 1.5rem 2rem 2rem;
       text-align: center;
       font-size: 0.85rem;
-      color: #555;
+      color: rgba(48,34,18,0.7);
     }
 
-    /* Accessibility */
     @media (prefers-reduced-motion: reduce) {
       .marquee { animation: none; }
     }
@@ -133,12 +126,10 @@
     </a>
   </header>
 
-  <!-- FULL-BLEED CONTINUOUS CAROUSEL -->
   <section class="gallery" aria-label="Gallery">
     <div class="carousel">
       <div class="marquee">
 
-        <!-- Track A -->
         <div class="track">
           <div class="item"><img src="assets/hair1.jpg" alt=""></div>
           <div class="item"><img src="assets/hair2.jpg" alt=""></div>
@@ -146,7 +137,6 @@
           <div class="item"><img src="assets/hair4.jpg" alt=""></div>
         </div>
 
-        <!-- Track B (duplicate) -->
         <div class="track">
           <div class="item"><img src="assets/hair1.jpg" alt=""></div>
           <div class="item"><img src="assets/hair2.jpg" alt=""></div>
@@ -159,7 +149,7 @@
   </section>
 
   <footer>
-    © 1989 Serap Kuafor
+    © 1989 Serap Kuaför
   </footer>
 
 </body>
