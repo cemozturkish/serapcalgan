@@ -22,8 +22,6 @@
       font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
       background: var(--bg);
       color: var(--text);
-      line-height: 1.6;
-
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -46,30 +44,18 @@
       color: inherit;
       text-decoration: none;
     }
-    h1 a:hover { opacity: 0.8; }
 
-    /* Spacer to match home page button height so the band lines align */
     .book-spacer {
       display: inline-block;
       margin-top: 0.55rem;
-      font-size: 0.78rem;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      text-decoration: none;
-      border: 1px solid transparent;
       padding: 0.5rem 0.95rem;
-      visibility: hidden;     /* takes space, but not visible */
-      pointer-events: none;
-      user-select: none;
+      border: 1px solid transparent;
+      visibility: hidden;
     }
 
-    /* FULL-BLEED BAND (matches home photo band lines) */
     .band {
       width: 100vw;
       margin-left: calc(50% - 50vw);
-      overflow: hidden;
-
-      background: transparent;
       border-top: 1px solid var(--line);
       border-bottom: 1px solid var(--line);
       padding: 1rem 0;
@@ -81,30 +67,24 @@
       padding: 0 2rem;
     }
 
-    main {
-      flex: 1;
-      display: block;
-    }
+    main { flex: 1; }
 
     .layout {
       display: grid;
       grid-template-columns: 1.05fr 0.95fr;
       gap: 1.1rem;
-      align-items: start;
     }
 
-    /* Calendar */
-    .calendar {
-      width: 100%;
+    .calendar, .panel {
       border: 1px solid var(--line-strong);
       border-radius: 10px;
       background: rgba(255,255,255,0.22);
-      overflow: hidden;
     }
+
+    .calendar { overflow: hidden; }
 
     .cal-header {
       display: flex;
-      align-items: center;
       justify-content: space-between;
       padding: 0.55rem 0.7rem;
       border-bottom: 1px solid var(--line);
@@ -114,32 +94,18 @@
       font-size: 0.82rem;
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      user-select: none;
-      white-space: nowrap;
     }
 
     .btn {
-      appearance: none;
-      border: 1px solid var(--line-strong);
-      background: transparent;
-      color: var(--text);
-      border-radius: 8px;
       width: 30px;
       height: 30px;
-      display: grid;
-      place-items: center;
+      border: 1px solid var(--line-strong);
+      background: transparent;
+      border-radius: 8px;
       cursor: pointer;
-      transition: background 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
-      user-select: none;
     }
-    .btn:hover {
-      background: var(--chip);
-      border-color: rgba(48,34,18,0.35);
-    }
-    .btn:disabled {
-      opacity: 0.35;
-      cursor: not-allowed;
-    }
+
+    .btn:disabled { opacity: 0.3; cursor: not-allowed; }
 
     .grid {
       display: grid;
@@ -152,9 +118,8 @@
       font-size: 0.68rem;
       letter-spacing: 0.16em;
       text-transform: uppercase;
-      color: var(--muted);
       text-align: center;
-      user-select: none;
+      color: var(--muted);
     }
 
     .day {
@@ -162,118 +127,65 @@
       border-radius: 8px;
       border: 1px solid transparent;
       background: transparent;
-      display: grid;
-      place-items: center;
       cursor: pointer;
-      font-size: 0.85rem;
-      color: var(--text);
-      transition: background 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
-      user-select: none;
     }
 
-    .day:hover {
-      background: var(--chip);
-      border-color: rgba(48,34,18,0.18);
-    }
+    .day:hover { background: var(--chip); }
 
-    .day.is-outside { opacity: 0.35; }
     .day.is-disabled {
       opacity: 0.25;
       cursor: not-allowed;
-      background: transparent;
-      border-color: transparent;
     }
-    .day.is-disabled:hover { background: transparent; border-color: transparent; }
 
     .day.is-selected {
       background: var(--chip-strong);
       border-color: rgba(48,34,18,0.35);
     }
 
-    /* Form */
     .panel {
-      width: 100%;
-      border: 1px solid var(--line-strong);
-      border-radius: 10px;
-      background: rgba(255,255,255,0.18);
       padding: 0.75rem 0.8rem 0.85rem;
     }
 
     .picked {
       font-size: 0.78rem;
-      letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: var(--muted);
-      padding: 0.2rem 0 0.7rem;
+      letter-spacing: 0.12em;
       min-height: 1.4em;
+      margin-bottom: 0.6rem;
+      color: var(--muted);
     }
 
-    form {
-      display: grid;
-      gap: 0.65rem;
-    }
-
-    .field { display: grid; gap: 0.35rem; }
+    form { display: grid; gap: 0.65rem; }
 
     label {
-      font-size: 0.70rem;
+      font-size: 0.7rem;
       letter-spacing: 0.18em;
       text-transform: uppercase;
       color: var(--muted);
     }
 
-    input[type="text"],
-    input[type="email"],
-    input[type="tel"] {
-      width: 100%;
-      font-family: inherit;
-      font-size: 0.95rem;
-      color: var(--text);
-      background: transparent;
-      border: 1px solid rgba(48,34,18,0.25);
-      border-radius: 10px;
+    input {
       padding: 0.65rem 0.75rem;
-      transition: border-color 0.15s ease, background 0.15s ease;
-    }
-
-    input:focus {
-      outline: none;
-      border-color: rgba(48,34,18,0.55);
-      background: rgba(255,255,255,0.12);
+      border-radius: 10px;
+      border: 1px solid rgba(48,34,18,0.25);
+      background: transparent;
     }
 
     .request {
       margin-top: 0.35rem;
-      appearance: none;
-      width: 100%;
+      padding: 0.7rem;
+      border-radius: 10px;
       border: 1px solid var(--line-strong);
       background: transparent;
-      color: var(--text);
-      border-radius: 10px;
-      padding: 0.7rem 0.9rem;
       font-size: 0.78rem;
       letter-spacing: 0.22em;
       text-transform: uppercase;
       cursor: pointer;
-      transition: background 0.15s ease, color 0.15s ease, opacity 0.15s ease;
-    }
-
-    .request:hover:enabled {
-      background: var(--text);
-      color: var(--bg);
     }
 
     .request:disabled {
       opacity: 0.35;
       cursor: not-allowed;
-    }
-
-    .status {
-      margin-top: 0.6rem;
-      font-size: 0.85rem;
-      color: rgba(48,34,18,0.8);
-      min-height: 1.2em;
-      text-align: center;
     }
 
     footer {
@@ -284,225 +196,108 @@
     }
 
     @media (max-width: 860px) {
-      .band-inner { padding: 0 1.2rem; }
       .layout { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 
 <body>
-  <header>
-    <h1><a href="/index.html">Serap Calgan</a></h1>
-    <!-- Invisible spacer so the band lines align with home page -->
-    <span class="book-spacer" aria-hidden="true">RANDEVU AL</span>
-  </header>
+<header>
+  <h1><a href="/index.html">Serap Calgan</a></h1>
+  <span class="book-spacer">RANDEVU AL</span>
+</header>
 
-  <main>
-    <section class="band" aria-label="Randevu bandı">
-      <div class="band-inner">
-        <div class="layout">
+<main>
+  <section class="band">
+    <div class="band-inner">
+      <div class="layout">
 
-          <div class="calendar" id="calendar">
-            <div class="cal-header">
-              <button class="btn" id="prev" aria-label="Önceki ay">‹</button>
-              <div class="month" id="monthLabel">Ay Yıl</div>
-              <button class="btn" id="next" aria-label="Sonraki ay">›</button>
-            </div>
-
-            <div class="grid" id="dowRow" aria-hidden="true"></div>
-            <div class="grid" id="daysGrid" aria-label="Takvim günleri"></div>
+        <div class="calendar">
+          <div class="cal-header">
+            <button class="btn" id="prev">‹</button>
+            <div class="month" id="monthLabel"></div>
+            <button class="btn" id="next">›</button>
           </div>
-
-          <div class="panel">
-            <div class="picked" id="pickedLine"></div>
-
-            <form id="requestForm" autocomplete="on">
-              <div class="field">
-                <label for="name">Ad Soyad</label>
-                <input id="name" name="name" type="text" required />
-              </div>
-
-              <div class="field">
-                <label for="email">E-posta</label>
-                <input id="email" name="email" type="email" required />
-              </div>
-
-              <div class="field">
-                <label for="phone">Telefon</label>
-                <input id="phone" name="phone" type="tel" inputmode="tel" required />
-              </div>
-
-              <button class="request" id="requestBtn" type="submit" disabled>TALEP ET</button>
-            </form>
-
-            <div class="status" id="statusLine"></div>
-          </div>
-
+          <div class="grid" id="dowRow"></div>
+          <div class="grid" id="daysGrid"></div>
         </div>
+
+        <div class="panel">
+          <div class="picked" id="pickedLine"></div>
+          <form id="requestForm">
+            <label>Ad Soyad</label><input required />
+            <label>E-posta</label><input type="email" required />
+            <label>Telefon</label><input type="tel" required />
+            <button class="request" id="requestBtn" disabled>TALEP ET</button>
+          </form>
+        </div>
+
       </div>
-    </section>
-  </main>
+    </div>
+  </section>
+</main>
 
-  <footer>© 1989 Serap Kuaför</footer>
+<footer>© 1989 Serap Kuaför</footer>
 
-  <script>
-    (function () {
-      // Randevu başlangıcı: 20 Ocak 2026
-      const MIN_DATE = new Date("2026-01-20T00:00:00");
-      MIN_DATE.setHours(0,0,0,0);
+<script>
+(() => {
+  const MIN_DATE = new Date("2026-01-20");
+  const BLOCKED = new Set([
+    "2026-01-27","2026-01-30","2026-02-04",
+    "2026-02-10","2026-02-11","2026-02-23","2026-02-27"
+  ]);
 
-      const today = new Date();
-      today.setHours(0,0,0,0);
+  const view = new Date(MIN_DATE.getFullYear(), MIN_DATE.getMonth(), 1);
+  let selected = null;
 
-      const startMonth = new Date(Math.max(today.getTime(), MIN_DATE.getTime()));
-      const view = new Date(startMonth.getFullYear(), startMonth.getMonth(), 1);
+  const monthLabel = document.getElementById("monthLabel");
+  const daysGrid = document.getElementById("daysGrid");
+  const dowRow = document.getElementById("dowRow");
+  const pickedLine = document.getElementById("pickedLine");
+  const requestBtn = document.getElementById("requestBtn");
 
-      const monthLabel = document.getElementById("monthLabel");
-      const daysGrid = document.getElementById("daysGrid");
-      const dowRow = document.getElementById("dowRow");
-      const prevBtn = document.getElementById("prev");
-      const nextBtn = document.getElementById("next");
+  ["Pzt","Sal","Çar","Per","Cum","Cmt","Paz"].forEach(d => {
+    const el = document.createElement("div");
+    el.className = "dow";
+    el.textContent = d;
+    dowRow.appendChild(el);
+  });
 
-      const pickedLine = document.getElementById("pickedLine");
-      const requestBtn = document.getElementById("requestBtn");
-      const statusLine = document.getElementById("statusLine");
-      const requestForm = document.getElementById("requestForm");
+  const isUnavailable = d =>
+    d < MIN_DATE ||
+    [0,6].includes(d.getDay()) ||
+    BLOCKED.has(d.toISOString().slice(0,10));
 
-      const DOW_TR = ["Pzt","Sal","Çar","Per","Cum","Cmt","Paz"];
-      let selected = null;
-
-      dowRow.innerHTML = "";
-      for (const d of DOW_TR) {
-        const el = document.createElement("div");
-        el.className = "dow";
-        el.textContent = d;
-        dowRow.appendChild(el);
+  const render = () => {
+    monthLabel.textContent = view.toLocaleDateString("tr-TR",{month:"long",year:"numeric"});
+    daysGrid.innerHTML = "";
+    const first = new Date(view.getFullYear(), view.getMonth(), 1);
+    const start = (first.getDay()+6)%7;
+    for(let i=0;i<42;i++){
+      const date = new Date(view.getFullYear(), view.getMonth(), i-start+1);
+      const btn = document.createElement("button");
+      btn.className = "day";
+      btn.textContent = date.getDate();
+      if(isUnavailable(date)){
+        btn.classList.add("is-disabled");
+        btn.disabled = true;
       }
-
-      function formatMonth(d) {
-        // Month + year in Turkish, then uppercase via CSS letter spacing already.
-        return d.toLocaleDateString("tr-TR", { month: "long", year: "numeric" });
-      }
-
-      function mondayFirstIndex(jsDay) { return (jsDay + 6) % 7; }
-
-      function isSameDay(a, b) {
-        return a && b &&
-          a.getFullYear() === b.getFullYear() &&
-          a.getMonth() === b.getMonth() &&
-          a.getDate() === b.getDate();
-      }
-
-      function isBeforeMin(d) { return d.getTime() < MIN_DATE.getTime(); }
-
-      function updateRightPanel() {
-        if (!selected) {
-          pickedLine.textContent = "";
-          requestBtn.disabled = true;
-          return;
-        }
-        pickedLine.textContent = selected.toLocaleDateString("tr-TR", {
-          weekday: "long", year: "numeric", month: "long", day: "numeric"
-        });
+      btn.onclick = () => {
+        selected = date;
+        pickedLine.textContent = date.toLocaleDateString("tr-TR",{weekday:"long",day:"numeric",month:"long"});
         requestBtn.disabled = false;
-      }
-
-      function render() {
-        monthLabel.textContent = formatMonth(view);
-
-        const first = new Date(view.getFullYear(), view.getMonth(), 1);
-        const firstIndex = mondayFirstIndex(first.getDay());
-
-        const last = new Date(view.getFullYear(), view.getMonth() + 1, 0);
-        const daysInMonth = last.getDate();
-
-        const prevLast = new Date(view.getFullYear(), view.getMonth(), 0);
-        const prevDays = prevLast.getDate();
-
-        daysGrid.innerHTML = "";
-
-        for (let i = 0; i < 42; i++) {
-          const cell = document.createElement("button");
-          cell.type = "button";
-          cell.className = "day";
-
-          let date, dayNum, outside = false;
-
-          if (i < firstIndex) {
-            dayNum = prevDays - (firstIndex - 1 - i);
-            date = new Date(view.getFullYear(), view.getMonth() - 1, dayNum);
-            outside = true;
-          } else if (i >= firstIndex + daysInMonth) {
-            dayNum = i - (firstIndex + daysInMonth) + 1;
-            date = new Date(view.getFullYear(), view.getMonth() + 1, dayNum);
-            outside = true;
-          } else {
-            dayNum = i - firstIndex + 1;
-            date = new Date(view.getFullYear(), view.getMonth(), dayNum);
-          }
-
-          date.setHours(0,0,0,0);
-          cell.textContent = dayNum;
-
-          if (outside) cell.classList.add("is-outside");
-
-          if (isBeforeMin(date)) {
-            cell.classList.add("is-disabled");
-            cell.disabled = true;
-          }
-
-          if (selected && isSameDay(date, selected)) {
-            cell.classList.add("is-selected");
-          }
-
-          cell.addEventListener("click", () => {
-            if (isBeforeMin(date)) return;
-            selected = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-            statusLine.textContent = "";
-            updateRightPanel();
-            render();
-          });
-
-          daysGrid.appendChild(cell);
-        }
-
-        const prevMonth = new Date(view.getFullYear(), view.getMonth() - 1, 1);
-        const minMonth = new Date(MIN_DATE.getFullYear(), MIN_DATE.getMonth(), 1);
-        prevBtn.disabled = prevMonth.getTime() < minMonth.getTime();
-
-        updateRightPanel();
-      }
-
-      prevBtn.addEventListener("click", () => {
-        if (prevBtn.disabled) return;
-        view.setMonth(view.getMonth() - 1);
         render();
-      });
+      };
+      if(selected && date.toDateString()===selected.toDateString())
+        btn.classList.add("is-selected");
+      daysGrid.appendChild(btn);
+    }
+  };
 
-      nextBtn.addEventListener("click", () => {
-        view.setMonth(view.getMonth() + 1);
-        render();
-      });
-
-      requestForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-        if (!selected) return;
-
-        const name = document.getElementById("name").value.trim();
-        const email = document.getElementById("email").value.trim();
-        const phone = document.getElementById("phone").value.trim();
-        if (!name || !email || !phone) return;
-
-        statusLine.textContent = "Talebiniz alındı.";
-        requestForm.reset();
-        requestBtn.disabled = true;
-        selected = null;
-        pickedLine.textContent = "";
-        render();
-      });
-
-      render();
-    })();
-  </script>
+  document.getElementById("prev").onclick = () => { view.setMonth(view.getMonth()-1); render(); };
+  document.getElementById("next").onclick = () => { view.setMonth(view.getMonth()+1); render(); };
+  render();
+})();
+</script>
 </body>
 </html>
