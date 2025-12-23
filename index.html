@@ -13,10 +13,10 @@
       background: #ffffff;
       color: #000000;
       line-height: 1.6;
-      overflow-x: hidden; /* prevents horizontal scroll */
+      overflow-x: hidden;
     }
 
-    /* HERO (still constrained) */
+    /* HERO */
     header {
       text-align: center;
       padding: 1.6rem 2rem 0.8rem;
@@ -47,36 +47,37 @@
       color: #fff;
     }
 
-    /* FULL-BLEED GALLERY SECTION */
+    /* FULL-BLEED GALLERY */
     .gallery {
-      margin-top: 1.2rem;
-
-      /* This is the key part */
       width: 100vw;
       margin-left: calc(50% - 50vw);
+      margin-top: 1.2rem;
     }
 
     .carousel {
-      position: relative;
       overflow: hidden;
-      padding: 1rem 0;
       background: #f6f6f6;
       border-top: 1px solid #ededed;
       border-bottom: 1px solid #ededed;
+      padding: 1rem 0;
     }
 
+    /* Moving container */
+    .marquee {
+      display: flex;
+      width: max-content;
+      animation: marquee 22s linear infinite;
+    }
+
+    .carousel:hover .marquee {
+      animation-play-state: paused;
+    }
+
+    /* Each full copy */
     .track {
       display: flex;
       gap: 1.1rem;
-      width: max-content;
-      will-change: transform;
-      animation: scrollLeft 20s linear infinite;
-      padding-left: 1.1rem;
       padding-right: 1.1rem;
-    }
-
-    .carousel:hover .track {
-      animation-play-state: paused;
     }
 
     .item {
@@ -94,9 +95,14 @@
       display: block;
     }
 
-    @keyframes scrollLeft {
-      from { transform: translateX(0); }
-      to   { transform: translateX(-50%); }
+    /* Move exactly one full track width */
+    @keyframes marquee {
+      from {
+        transform: translateX(0);
+      }
+      to {
+        transform: translateX(-50%);
+      }
     }
 
     footer {
@@ -108,7 +114,9 @@
 
     /* Accessibility */
     @media (prefers-reduced-motion: reduce) {
-      .track { animation: none; }
+      .marquee {
+        animation: none;
+      }
     }
   </style>
 </head>
@@ -122,19 +130,25 @@
     </a>
   </header>
 
-  <!-- FULL-BLEED CAROUSEL -->
+  <!-- FULL-BLEED CONTINUOUS CAROUSEL -->
   <section class="gallery" aria-label="Gallery">
     <div class="carousel">
-      <div class="track">
-        <!-- Set A -->
-        <div class="item"><img src="assets/hair1.jpg" alt="Hair work 1"></div>
-        <div class="item"><img src="assets/hair2.jpg" alt="Hair work 2"></div>
-        <div class="item"><img src="assets/hair3.jpg" alt="Hair work 3"></div>
+      <div class="marquee">
+        <!-- Track A -->
+        <div class="track">
+          <div class="item"><img src="assets/hair1.jpg" alt=""></div>
+          <div class="item"><img src="assets/hair2.jpg" alt=""></div>
+          <div class="item"><img src="assets/hair3.jpg" alt=""></div>
+          <div class="item"><img src="assets/hair4.jpg" alt=""></div>
+        </div>
 
-        <!-- Set B (duplicate for seamless loop) -->
-        <div class="item"><img src="assets/hair1.jpg" alt=""></div>
-        <div class="item"><img src="assets/hair2.jpg" alt=""></div>
-        <div class="item"><img src="assets/hair3.jpg" alt=""></div>
+        <!-- Track B (duplicate) -->
+        <div class="track">
+          <div class="item"><img src="assets/hair1.jpg" alt=""></div>
+          <div class="item"><img src="assets/hair2.jpg" alt=""></div>
+          <div class="item"><img src="assets/hair3.jpg" alt=""></div>
+          <div class="item"><img src="assets/hair4.jpg" alt=""></div>
+        </div>
       </div>
     </div>
   </section>
