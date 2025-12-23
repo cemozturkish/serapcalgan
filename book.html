@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Book — Serap Kuaför</title>
+  <title>Serap Calgan — Book</title>
 
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -15,66 +15,60 @@
       line-height: 1.6;
     }
 
+    /* HEADER — matches home scale */
     header {
-      padding: 1.6rem 2rem 1rem;
       text-align: center;
+      padding: 1.6rem 2rem 0.8rem;
     }
 
     h1 {
-      font-size: clamp(1.4rem, 2.6vw, 2rem);
+      font-size: clamp(1.7rem, 3vw, 2.3rem);
       font-weight: 500;
       letter-spacing: 0.08em;
       text-transform: uppercase;
     }
 
-    .nav {
-      margin-top: 0.8rem;
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
-
-    a {
-      color: #302212;
+    h1 a {
+      color: inherit;
       text-decoration: none;
-      border-bottom: 1px solid rgba(48,34,18,0.4);
-      padding-bottom: 2px;
     }
 
-    a:hover {
-      border-bottom-color: rgba(48,34,18,0.9);
+    h1 a:hover {
+      opacity: 0.8;
     }
 
+    /* MAIN CONTENT */
     main {
-      max-width: 980px;
+      max-width: 900px;
       margin: 0 auto;
-      padding: 1.25rem 2rem 3rem;
+      padding: 1rem 2rem 3rem;
     }
 
-    .card {
+    .section {
       border-top: 1px solid rgba(48,34,18,0.15);
       border-bottom: 1px solid rgba(48,34,18,0.15);
-      padding: 1.5rem 0;
+      padding: 1.2rem 0;
     }
 
     .label {
-      font-size: 0.8rem;
+      font-size: 0.72rem;
       letter-spacing: 0.22em;
       text-transform: uppercase;
       opacity: 0.8;
-      margin-bottom: 0.75rem;
+      margin-bottom: 0.7rem;
     }
 
     .note {
-      max-width: 62ch;
+      max-width: 60ch;
+      font-size: 0.95rem;
       opacity: 0.9;
-      margin-bottom: 1.25rem;
+      margin-bottom: 1.1rem;
     }
 
+    /* EMBED PLACEHOLDER */
     .embed {
       width: 100%;
-      min-height: 680px; /* gives it that “calendar page” feel */
+      min-height: 600px;
       background: rgba(48,34,18,0.04);
       border: 1px solid rgba(48,34,18,0.12);
       border-radius: 10px;
@@ -84,13 +78,14 @@
     }
 
     .embed p {
-      max-width: 60ch;
+      max-width: 56ch;
       text-align: center;
+      font-size: 0.9rem;
       opacity: 0.85;
     }
 
     footer {
-      padding: 1.5rem 2rem 2rem;
+      padding: 1.2rem 2rem 2rem;
       text-align: center;
       font-size: 0.85rem;
       color: rgba(48,34,18,0.7);
@@ -99,30 +94,32 @@
 </head>
 
 <body>
+
   <header>
-    <h1>Book</h1>
-    <div class="nav">
-      <a href="index.html">Home</a>
-    </div>
+    <!-- Clicking title returns home -->
+    <h1><a href="index.html">Serap Calgan</a></h1>
   </header>
 
   <main>
-    <section class="card">
+    <section class="section">
       <div class="label">Appointments</div>
       <p class="note">
-        Choose a time that works for you. If you don’t see availability, reach out directly and we’ll find a slot.
+        Select a time that works for you. If you don’t see availability, reach out directly and we’ll find a slot.
       </p>
 
-      <!-- Replace this box with your booking platform embed (Calendly/Fresha/Square/Acuity/etc.) -->
+      <!-- Replace this with your booking platform embed -->
       <div class="embed">
         <p>
-          Calendar embed goes here.<br><br>
-          When you're ready, paste your booking service embed code in this section.
+          Booking calendar will appear here.<br><br>
+          Paste your booking service embed code into this section when ready.
         </p>
       </div>
     </section>
   </main>
 
-  <footer>© 1989 Serap Kuaför</footer>
+  <footer>
+    © 1989 Serap Kuaför
+  </footer>
+
 </body>
 </html>
