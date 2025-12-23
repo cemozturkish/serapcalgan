@@ -128,13 +128,22 @@
       border: 1px solid transparent;
       background: transparent;
       cursor: pointer;
+      color: var(--text);
     }
 
     .day:hover { background: var(--chip); }
 
+    /* FIXED VISIBILITY FOR UNAVAILABLE DAYS */
     .day.is-disabled {
-      opacity: 0.25;
+      opacity: 0.6;
+      color: rgba(48,34,18,0.45);
       cursor: not-allowed;
+      background: rgba(48,34,18,0.03);
+    }
+
+    .day.is-disabled:hover {
+      background: rgba(48,34,18,0.03);
+      border-color: transparent;
     }
 
     .day.is-selected {
@@ -273,29 +282,35 @@
     daysGrid.innerHTML = "";
     const first = new Date(view.getFullYear(), view.getMonth(), 1);
     const start = (first.getDay()+6)%7;
+
     for(let i=0;i<42;i++){
       const date = new Date(view.getFullYear(), view.getMonth(), i-start+1);
       const btn = document.createElement("button");
       btn.className = "day";
       btn.textContent = date.getDate();
+
       if(isUnavailable(date)){
         btn.classList.add("is-disabled");
         btn.disabled = true;
       }
+
       btn.onclick = () => {
         selected = date;
         pickedLine.textContent = date.toLocaleDateString("tr-TR",{weekday:"long",day:"numeric",month:"long"});
         requestBtn.disabled = false;
         render();
       };
+
       if(selected && date.toDateString()===selected.toDateString())
         btn.classList.add("is-selected");
+
       daysGrid.appendChild(btn);
     }
   };
 
   document.getElementById("prev").onclick = () => { view.setMonth(view.getMonth()-1); render(); };
   document.getElementById("next").onclick = () => { view.setMonth(view.getMonth()+1); render(); };
+
   render();
 })();
 </script>
