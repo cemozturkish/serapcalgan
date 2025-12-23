@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Serap Calgan — Booking</title>
+  <title>Serap Calgan — Randevu</title>
 
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -48,6 +48,21 @@
     }
     h1 a:hover { opacity: 0.8; }
 
+    /* Spacer to match home page button height so the band lines align */
+    .book-spacer {
+      display: inline-block;
+      margin-top: 0.55rem;
+      font-size: 0.78rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: 1px solid transparent;
+      padding: 0.5rem 0.95rem;
+      visibility: hidden;     /* takes space, but not visible */
+      pointer-events: none;
+      user-select: none;
+    }
+
     /* FULL-BLEED BAND (matches home photo band lines) */
     .band {
       width: 100vw;
@@ -57,10 +72,9 @@
       background: transparent;
       border-top: 1px solid var(--line);
       border-bottom: 1px solid var(--line);
-      padding: 1rem 0; /* match home photo band padding */
+      padding: 1rem 0;
     }
 
-    /* Centered inner content inside the full-bleed band */
     .band-inner {
       max-width: 980px;
       margin: 0 auto;
@@ -68,11 +82,10 @@
     }
 
     main {
-      flex: 1; /* keeps footer consistent */
+      flex: 1;
       display: block;
     }
 
-    /* Two-column booking layout inside the band */
     .layout {
       display: grid;
       grid-template-columns: 1.05fr 0.95fr;
@@ -80,6 +93,7 @@
       align-items: start;
     }
 
+    /* Calendar */
     .calendar {
       width: 100%;
       border: 1px solid var(--line-strong);
@@ -176,6 +190,7 @@
       border-color: rgba(48,34,18,0.35);
     }
 
+    /* Form */
     .panel {
       width: 100%;
       border: 1px solid var(--line-strong);
@@ -278,23 +293,24 @@
 <body>
   <header>
     <h1><a href="/index.html">Serap Calgan</a></h1>
+    <!-- Invisible spacer so the band lines align with home page -->
+    <span class="book-spacer" aria-hidden="true">RANDEVU AL</span>
   </header>
 
   <main>
-    <!-- This band matches the home page photo band (same lines) -->
-    <section class="band" aria-label="Booking band">
+    <section class="band" aria-label="Randevu bandı">
       <div class="band-inner">
         <div class="layout">
 
           <div class="calendar" id="calendar">
             <div class="cal-header">
-              <button class="btn" id="prev" aria-label="Previous month">‹</button>
-              <div class="month" id="monthLabel">Month YYYY</div>
-              <button class="btn" id="next" aria-label="Next month">›</button>
+              <button class="btn" id="prev" aria-label="Önceki ay">‹</button>
+              <div class="month" id="monthLabel">Ay Yıl</div>
+              <button class="btn" id="next" aria-label="Sonraki ay">›</button>
             </div>
 
             <div class="grid" id="dowRow" aria-hidden="true"></div>
-            <div class="grid" id="daysGrid" aria-label="Calendar days"></div>
+            <div class="grid" id="daysGrid" aria-label="Takvim günleri"></div>
           </div>
 
           <div class="panel">
@@ -302,21 +318,21 @@
 
             <form id="requestForm" autocomplete="on">
               <div class="field">
-                <label for="name">Name</label>
+                <label for="name">Ad Soyad</label>
                 <input id="name" name="name" type="text" required />
               </div>
 
               <div class="field">
-                <label for="email">Email</label>
+                <label for="email">E-posta</label>
                 <input id="email" name="email" type="email" required />
               </div>
 
               <div class="field">
-                <label for="phone">Phone Number</label>
+                <label for="phone">Telefon</label>
                 <input id="phone" name="phone" type="tel" inputmode="tel" required />
               </div>
 
-              <button class="request" id="requestBtn" type="submit" disabled>REQUEST</button>
+              <button class="request" id="requestBtn" type="submit" disabled>TALEP ET</button>
             </form>
 
             <div class="status" id="statusLine"></div>
@@ -331,6 +347,7 @@
 
   <script>
     (function () {
+      // Randevu başlangıcı: 20 Ocak 2026
       const MIN_DATE = new Date("2026-01-20T00:00:00");
       MIN_DATE.setHours(0,0,0,0);
 
@@ -351,11 +368,11 @@
       const statusLine = document.getElementById("statusLine");
       const requestForm = document.getElementById("requestForm");
 
-      const DOW = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+      const DOW_TR = ["Pzt","Sal","Çar","Per","Cum","Cmt","Paz"];
       let selected = null;
 
       dowRow.innerHTML = "";
-      for (const d of DOW) {
+      for (const d of DOW_TR) {
         const el = document.createElement("div");
         el.className = "dow";
         el.textContent = d;
@@ -363,7 +380,8 @@
       }
 
       function formatMonth(d) {
-        return d.toLocaleDateString(undefined, { month: "long", year: "numeric" });
+        // Month + year in Turkish, then uppercase via CSS letter spacing already.
+        return d.toLocaleDateString("tr-TR", { month: "long", year: "numeric" });
       }
 
       function mondayFirstIndex(jsDay) { return (jsDay + 6) % 7; }
@@ -383,7 +401,7 @@
           requestBtn.disabled = true;
           return;
         }
-        pickedLine.textContent = selected.toLocaleDateString(undefined, {
+        pickedLine.textContent = selected.toLocaleDateString("tr-TR", {
           weekday: "long", year: "numeric", month: "long", day: "numeric"
         });
         requestBtn.disabled = false;
@@ -475,7 +493,7 @@
         const phone = document.getElementById("phone").value.trim();
         if (!name || !email || !phone) return;
 
-        statusLine.textContent = "Request received.";
+        statusLine.textContent = "Talebiniz alındı.";
         requestForm.reset();
         requestBtn.disabled = true;
         selected = null;
