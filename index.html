@@ -13,9 +13,10 @@
       background: #ffffff;
       color: #000000;
       line-height: 1.6;
+      overflow-x: hidden; /* prevents horizontal scroll */
     }
 
-    /* HERO */
+    /* HERO (still constrained) */
     header {
       text-align: center;
       padding: 1.6rem 2rem 0.8rem;
@@ -46,47 +47,41 @@
       color: #fff;
     }
 
-    /* PAGE WRAP */
-    main {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 2.25rem 3rem;
-    }
-
+    /* FULL-BLEED GALLERY SECTION */
     .gallery {
-      margin-top: 1.1rem;
+      margin-top: 1.2rem;
+
+      /* This is the key part */
+      width: 100vw;
+      margin-left: calc(50% - 50vw);
     }
 
-    /* === Infinite Carousel === */
     .carousel {
       position: relative;
       overflow: hidden;
-      border-radius: 16px;
+      padding: 1rem 0;
       background: #f6f6f6;
-      border: 1px solid #ededed;
-      padding: 0.9rem 0; /* vertical breathing room */
+      border-top: 1px solid #ededed;
+      border-bottom: 1px solid #ededed;
     }
 
-    /* Track that moves left forever */
     .track {
       display: flex;
-      width: max-content;
       gap: 1.1rem;
+      width: max-content;
       will-change: transform;
-      animation: scrollLeft 18s linear infinite;
+      animation: scrollLeft 20s linear infinite;
       padding-left: 1.1rem;
       padding-right: 1.1rem;
     }
 
-    /* Pause on hover so people can actually see */
     .carousel:hover .track {
       animation-play-state: paused;
     }
 
-    /* Each item card (smaller photos) */
     .item {
       flex: 0 0 auto;
-      width: clamp(170px, 22vw, 240px); /* smaller than before */
+      width: clamp(170px, 22vw, 240px);
       border-radius: 14px;
       overflow: hidden;
       background: #ffffff;
@@ -104,14 +99,6 @@
       to   { transform: translateX(-50%); }
     }
 
-    /* Responsive spacing */
-    @media (max-width: 640px) {
-      header { padding: 1.3rem 1.25rem 0.6rem; }
-      main { padding: 0 1.25rem 2.5rem; }
-      .carousel { border-radius: 14px; }
-      .item { width: 190px; }
-    }
-
     footer {
       padding: 1.5rem 2rem 2rem;
       text-align: center;
@@ -119,7 +106,7 @@
       color: #555;
     }
 
-    /* Accessibility: reduce motion */
+    /* Accessibility */
     @media (prefers-reduced-motion: reduce) {
       .track { animation: none; }
     }
@@ -130,34 +117,27 @@
 
   <header>
     <h1>Serap Calgan</h1>
-
-    <!-- Replace with real booking link -->
     <a class="book" href="https://example.com/booking" target="_blank" rel="noopener noreferrer">
       BOOK
     </a>
   </header>
 
-  <main>
-    <section class="gallery" aria-label="Gallery">
-      <div class="carousel" aria-label="Infinite carousel of hair work photos">
-        <!--
-          We duplicate the image set twice to create a seamless loop.
-          If you add more images later, add them in BOTH groups.
-        -->
-        <div class="track">
-          <!-- Set A -->
-          <div class="item"><img src="assets/hair1.jpg" alt="Hair work 1"></div>
-          <div class="item"><img src="assets/hair2.jpg" alt="Hair work 2"></div>
-          <div class="item"><img src="assets/hair3.jpg" alt="Hair work 3"></div>
+  <!-- FULL-BLEED CAROUSEL -->
+  <section class="gallery" aria-label="Gallery">
+    <div class="carousel">
+      <div class="track">
+        <!-- Set A -->
+        <div class="item"><img src="assets/hair1.jpg" alt="Hair work 1"></div>
+        <div class="item"><img src="assets/hair2.jpg" alt="Hair work 2"></div>
+        <div class="item"><img src="assets/hair3.jpg" alt="Hair work 3"></div>
 
-          <!-- Set B (duplicate for seamless loop) -->
-          <div class="item"><img src="assets/hair1.jpg" alt="Hair work 1 duplicate"></div>
-          <div class="item"><img src="assets/hair2.jpg" alt="Hair work 2 duplicate"></div>
-          <div class="item"><img src="assets/hair3.jpg" alt="Hair work 3 duplicate"></div>
-        </div>
+        <!-- Set B (duplicate for seamless loop) -->
+        <div class="item"><img src="assets/hair1.jpg" alt=""></div>
+        <div class="item"><img src="assets/hair2.jpg" alt=""></div>
+        <div class="item"><img src="assets/hair3.jpg" alt=""></div>
       </div>
-    </section>
-  </main>
+    </div>
+  </section>
 
   <footer>
     © 2025 Serap Calgan
