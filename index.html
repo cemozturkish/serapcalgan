@@ -62,7 +62,6 @@
       padding: 1rem 0;
     }
 
-    /* Moving container */
     .marquee {
       display: flex;
       width: max-content;
@@ -73,7 +72,6 @@
       animation-play-state: paused;
     }
 
-    /* Track = row of images, no fixed widths */
     .track {
       display: flex;
       gap: 1.1rem;
@@ -81,9 +79,9 @@
       align-items: center;
     }
 
-    /* Image wrapper: height is fixed, width is free */
+    /* Images always fit vertically, natural width */
     .item {
-      height: 360px;          /* controls vertical size */
+      height: 360px;
       flex: 0 0 auto;
       display: flex;
       align-items: center;
@@ -92,12 +90,11 @@
     }
 
     .item img {
-      height: 100%;           /* always fill vertically */
-      width: auto;            /* natural width */
+      height: 100%;
+      width: auto;
       display: block;
     }
 
-    /* Seamless loop */
     @keyframes marquee {
       from { transform: translateX(0); }
       to   { transform: translateX(-50%); }
@@ -120,12 +117,10 @@
 
   <header>
     <h1>Serap Calgan</h1>
-    <a class="book" href="https://example.com/booking" target="_blank" rel="noopener noreferrer">
-      BOOK
-    </a>
+    <!-- BOOK now links to book.html -->
+    <a class="book" href="book.html">BOOK</a>
   </header>
 
-  <!-- FULL-BLEED CONTINUOUS CAROUSEL -->
   <section class="gallery" aria-label="Gallery">
     <div class="carousel">
       <div class="marquee">
