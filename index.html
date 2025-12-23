@@ -80,29 +80,33 @@
       padding-right: 1.1rem;
     }
 
+    /* CARD — fixed height, no cropping */
     .item {
       flex: 0 0 auto;
       width: clamp(170px, 22vw, 240px);
+      height: 360px;              /* uniform height */
       border-radius: 14px;
       overflow: hidden;
       background: #ffffff;
       border: 1px solid #ededed;
+
+      display: flex;
+      align-items: center;        /* vertical centering */
+      justify-content: center;    /* horizontal centering */
     }
 
     .item img {
-      width: 100%;
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
       height: auto;
       display: block;
     }
 
     /* Move exactly one full track width */
     @keyframes marquee {
-      from {
-        transform: translateX(0);
-      }
-      to {
-        transform: translateX(-50%);
-      }
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
     }
 
     footer {
@@ -114,9 +118,7 @@
 
     /* Accessibility */
     @media (prefers-reduced-motion: reduce) {
-      .marquee {
-        animation: none;
-      }
+      .marquee { animation: none; }
     }
   </style>
 </head>
@@ -134,6 +136,7 @@
   <section class="gallery" aria-label="Gallery">
     <div class="carousel">
       <div class="marquee">
+
         <!-- Track A -->
         <div class="track">
           <div class="item"><img src="assets/hair1.jpg" alt=""></div>
@@ -149,12 +152,13 @@
           <div class="item"><img src="assets/hair3.jpg" alt=""></div>
           <div class="item"><img src="assets/hair4.jpg" alt=""></div>
         </div>
+
       </div>
     </div>
   </section>
 
   <footer>
-    © 2025 Serap Calgan
+    © 1989 Serap Calgan
   </footer>
 
 </body>
