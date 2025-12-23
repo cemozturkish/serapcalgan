@@ -15,7 +15,7 @@
       --line: rgba(48,34,18,0.15);
       --line-strong: rgba(48,34,18,0.25);
       --chip: rgba(48,34,18,0.06);
-      --chip-strong: rgba(48,34,18,0.10);
+      --chip-strong: rgba(48,34,18,0.12);
     }
 
     body {
@@ -24,10 +24,10 @@
       color: var(--text);
       line-height: 1.6;
 
-      /* keep footer in consistent place */
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      overflow-x: hidden;
     }
 
     header {
@@ -48,54 +48,60 @@
     }
     h1 a:hover { opacity: 0.8; }
 
-    main {
-      max-width: 520px;
-      margin: 0 auto;
-      padding: 1rem 2rem 0;
-      flex: 1; /* keeps footer position stable */
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      width: 100%;
-    }
+    /* FULL-BLEED BAND (matches home photo band lines) */
+    .band {
+      width: 100vw;
+      margin-left: calc(50% - 50vw);
+      overflow: hidden;
 
-    .calendar-wrap {
-      width: 100%;
+      background: transparent;
       border-top: 1px solid var(--line);
       border-bottom: 1px solid var(--line);
-      padding: 1.2rem 0;
+      padding: 1rem 0; /* match home photo band padding */
+    }
+
+    /* Centered inner content inside the full-bleed band */
+    .band-inner {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    main {
+      flex: 1; /* keeps footer consistent */
+      display: block;
+    }
+
+    /* Two-column booking layout inside the band */
+    .layout {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 1.1rem;
+      align-items: start;
     }
 
     .calendar {
       width: 100%;
       border: 1px solid var(--line-strong);
-      border-radius: 12px;
-      background: rgba(255,255,255,0.25);
+      border-radius: 10px;
+      background: rgba(255,255,255,0.22);
       overflow: hidden;
-      backdrop-filter: blur(2px);
     }
 
     .cal-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0.85rem 0.9rem;
+      padding: 0.55rem 0.7rem;
       border-bottom: 1px solid var(--line);
-      background: rgba(255,255,255,0.18);
     }
 
     .month {
-      font-size: 0.92rem;
+      font-size: 0.82rem;
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      color: var(--text);
       user-select: none;
       white-space: nowrap;
-    }
-
-    .nav {
-      display: flex;
-      gap: 0.5rem;
     }
 
     .btn {
@@ -103,51 +109,52 @@
       border: 1px solid var(--line-strong);
       background: transparent;
       color: var(--text);
-      border-radius: 10px;
-      width: 36px;
-      height: 36px;
+      border-radius: 8px;
+      width: 30px;
+      height: 30px;
       display: grid;
       place-items: center;
       cursor: pointer;
-      transition: background 0.15s ease, border-color 0.15s ease, transform 0.05s ease;
+      transition: background 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
       user-select: none;
     }
-
     .btn:hover {
       background: var(--chip);
       border-color: rgba(48,34,18,0.35);
     }
-    .btn:active { transform: scale(0.98); }
+    .btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
 
     .grid {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
-      gap: 6px;
-      padding: 0.85rem 0.9rem 0.95rem;
+      gap: 5px;
+      padding: 0.6rem 0.7rem 0.7rem;
     }
 
     .dow {
-      font-size: 0.72rem;
-      letter-spacing: 0.18em;
+      font-size: 0.68rem;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
       color: var(--muted);
       text-align: center;
-      padding: 0.25rem 0;
       user-select: none;
     }
 
     .day {
-      height: 44px;
-      border-radius: 10px;
+      height: 36px;
+      border-radius: 8px;
       border: 1px solid transparent;
       background: transparent;
       display: grid;
       place-items: center;
       cursor: pointer;
+      font-size: 0.85rem;
       color: var(--text);
-      font-size: 0.95rem;
-      user-select: none;
       transition: background 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+      user-select: none;
     }
 
     .day:hover {
@@ -155,33 +162,103 @@
       border-color: rgba(48,34,18,0.18);
     }
 
-    .day.is-outside {
-      opacity: 0.35;
-    }
-
+    .day.is-outside { opacity: 0.35; }
     .day.is-disabled {
       opacity: 0.25;
       cursor: not-allowed;
       background: transparent;
       border-color: transparent;
     }
-    .day.is-disabled:hover {
-      background: transparent;
-      border-color: transparent;
-    }
+    .day.is-disabled:hover { background: transparent; border-color: transparent; }
 
     .day.is-selected {
-      background: rgba(48,34,18,0.12);
+      background: var(--chip-strong);
       border-color: rgba(48,34,18,0.35);
     }
 
-    .selected-line {
-      margin-top: 0.75rem;
+    .panel {
+      width: 100%;
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      background: rgba(255,255,255,0.18);
+      padding: 0.75rem 0.8rem 0.85rem;
+    }
+
+    .picked {
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 0.2rem 0 0.7rem;
+      min-height: 1.4em;
+    }
+
+    form {
+      display: grid;
+      gap: 0.65rem;
+    }
+
+    .field { display: grid; gap: 0.35rem; }
+
+    label {
+      font-size: 0.70rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"] {
+      width: 100%;
+      font-family: inherit;
+      font-size: 0.95rem;
+      color: var(--text);
+      background: transparent;
+      border: 1px solid rgba(48,34,18,0.25);
+      border-radius: 10px;
+      padding: 0.65rem 0.75rem;
+      transition: border-color 0.15s ease, background 0.15s ease;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: rgba(48,34,18,0.55);
+      background: rgba(255,255,255,0.12);
+    }
+
+    .request {
+      margin-top: 0.35rem;
+      appearance: none;
+      width: 100%;
+      border: 1px solid var(--line-strong);
+      background: transparent;
+      color: var(--text);
+      border-radius: 10px;
+      padding: 0.7rem 0.9rem;
+      font-size: 0.78rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.15s ease, color 0.15s ease, opacity 0.15s ease;
+    }
+
+    .request:hover:enabled {
+      background: var(--text);
+      color: var(--bg);
+    }
+
+    .request:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    .status {
+      margin-top: 0.6rem;
       font-size: 0.85rem;
       color: rgba(48,34,18,0.8);
-      letter-spacing: 0.02em;
-      text-align: center;
       min-height: 1.2em;
+      text-align: center;
     }
 
     footer {
@@ -189,6 +266,11 @@
       text-align: center;
       font-size: 0.85rem;
       color: rgba(48,34,18,0.7);
+    }
+
+    @media (max-width: 860px) {
+      .band-inner { padding: 0 1.2rem; }
+      .layout { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -199,25 +281,49 @@
   </header>
 
   <main>
-    <section class="calendar-wrap" aria-label="Booking calendar">
-      <div class="calendar" id="calendar">
-        <div class="cal-header">
-          <div class="nav">
-            <button class="btn" id="prev" aria-label="Previous month">‹</button>
+    <!-- This band matches the home page photo band (same lines) -->
+    <section class="band" aria-label="Booking band">
+      <div class="band-inner">
+        <div class="layout">
+
+          <div class="calendar" id="calendar">
+            <div class="cal-header">
+              <button class="btn" id="prev" aria-label="Previous month">‹</button>
+              <div class="month" id="monthLabel">Month YYYY</div>
+              <button class="btn" id="next" aria-label="Next month">›</button>
+            </div>
+
+            <div class="grid" id="dowRow" aria-hidden="true"></div>
+            <div class="grid" id="daysGrid" aria-label="Calendar days"></div>
           </div>
 
-          <div class="month" id="monthLabel">Month YYYY</div>
+          <div class="panel">
+            <div class="picked" id="pickedLine"></div>
 
-          <div class="nav">
-            <button class="btn" id="next" aria-label="Next month">›</button>
+            <form id="requestForm" autocomplete="on">
+              <div class="field">
+                <label for="name">Name</label>
+                <input id="name" name="name" type="text" required />
+              </div>
+
+              <div class="field">
+                <label for="email">Email</label>
+                <input id="email" name="email" type="email" required />
+              </div>
+
+              <div class="field">
+                <label for="phone">Phone Number</label>
+                <input id="phone" name="phone" type="tel" inputmode="tel" required />
+              </div>
+
+              <button class="request" id="requestBtn" type="submit" disabled>REQUEST</button>
+            </form>
+
+            <div class="status" id="statusLine"></div>
           </div>
+
         </div>
-
-        <div class="grid" id="dowRow" aria-hidden="true"></div>
-        <div class="grid" id="daysGrid"></div>
       </div>
-
-      <div class="selected-line" id="selectedLine"></div>
     </section>
   </main>
 
@@ -225,9 +331,9 @@
 
   <script>
     (function () {
-      // Booking becomes available from this date onward:
       const MIN_DATE = new Date("2026-01-20T00:00:00");
-      // Start the calendar on the month containing MIN_DATE (or current month if later).
+      MIN_DATE.setHours(0,0,0,0);
+
       const today = new Date();
       today.setHours(0,0,0,0);
 
@@ -237,13 +343,17 @@
       const monthLabel = document.getElementById("monthLabel");
       const daysGrid = document.getElementById("daysGrid");
       const dowRow = document.getElementById("dowRow");
-      const selectedLine = document.getElementById("selectedLine");
       const prevBtn = document.getElementById("prev");
       const nextBtn = document.getElementById("next");
 
-      const DOW = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+      const pickedLine = document.getElementById("pickedLine");
+      const requestBtn = document.getElementById("requestBtn");
+      const statusLine = document.getElementById("statusLine");
+      const requestForm = document.getElementById("requestForm");
 
-      // Render weekday header once
+      const DOW = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+      let selected = null;
+
       dowRow.innerHTML = "";
       for (const d of DOW) {
         const el = document.createElement("div");
@@ -252,17 +362,11 @@
         dowRow.appendChild(el);
       }
 
-      let selected = null;
-
       function formatMonth(d) {
         return d.toLocaleDateString(undefined, { month: "long", year: "numeric" });
       }
 
-      // Convert JS Sunday-first to Monday-first index
-      function mondayFirstIndex(jsDay) {
-        // JS: Sun=0..Sat=6 -> Mon=0..Sun=6
-        return (jsDay + 6) % 7;
-      }
+      function mondayFirstIndex(jsDay) { return (jsDay + 6) % 7; }
 
       function isSameDay(a, b) {
         return a && b &&
@@ -271,60 +375,60 @@
           a.getDate() === b.getDate();
       }
 
-      function isBeforeMin(d) {
-        return d.getTime() < MIN_DATE.getTime();
+      function isBeforeMin(d) { return d.getTime() < MIN_DATE.getTime(); }
+
+      function updateRightPanel() {
+        if (!selected) {
+          pickedLine.textContent = "";
+          requestBtn.disabled = true;
+          return;
+        }
+        pickedLine.textContent = selected.toLocaleDateString(undefined, {
+          weekday: "long", year: "numeric", month: "long", day: "numeric"
+        });
+        requestBtn.disabled = false;
       }
 
       function render() {
         monthLabel.textContent = formatMonth(view);
 
-        // First day of month
         const first = new Date(view.getFullYear(), view.getMonth(), 1);
         const firstIndex = mondayFirstIndex(first.getDay());
 
-        // Days in month
         const last = new Date(view.getFullYear(), view.getMonth() + 1, 0);
         const daysInMonth = last.getDate();
 
-        // Previous month days (for leading blanks)
         const prevLast = new Date(view.getFullYear(), view.getMonth(), 0);
         const prevDays = prevLast.getDate();
 
         daysGrid.innerHTML = "";
 
-        // Build 6 weeks (42 cells) for stable layout
         for (let i = 0; i < 42; i++) {
           const cell = document.createElement("button");
           cell.type = "button";
           cell.className = "day";
 
-          let date;
-          let dayNum;
-          let outside = false;
+          let date, dayNum, outside = false;
 
           if (i < firstIndex) {
-            // From previous month
             dayNum = prevDays - (firstIndex - 1 - i);
             date = new Date(view.getFullYear(), view.getMonth() - 1, dayNum);
             outside = true;
           } else if (i >= firstIndex + daysInMonth) {
-            // From next month
             dayNum = i - (firstIndex + daysInMonth) + 1;
             date = new Date(view.getFullYear(), view.getMonth() + 1, dayNum);
             outside = true;
           } else {
-            // Current month
             dayNum = i - firstIndex + 1;
             date = new Date(view.getFullYear(), view.getMonth(), dayNum);
           }
 
+          date.setHours(0,0,0,0);
           cell.textContent = dayNum;
 
           if (outside) cell.classList.add("is-outside");
 
-          // Disable before MIN_DATE
-          const disabled = isBeforeMin(date);
-          if (disabled) {
+          if (isBeforeMin(date)) {
             cell.classList.add("is-disabled");
             cell.disabled = true;
           }
@@ -336,25 +440,19 @@
           cell.addEventListener("click", () => {
             if (isBeforeMin(date)) return;
             selected = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-            selectedLine.textContent = selected.toLocaleDateString(undefined, {
-              weekday: "long", year: "numeric", month: "long", day: "numeric"
-            });
+            statusLine.textContent = "";
+            updateRightPanel();
             render();
           });
 
           daysGrid.appendChild(cell);
         }
 
-        // Disable prev if it would go earlier than MIN_DATE month
         const prevMonth = new Date(view.getFullYear(), view.getMonth() - 1, 1);
         const minMonth = new Date(MIN_DATE.getFullYear(), MIN_DATE.getMonth(), 1);
         prevBtn.disabled = prevMonth.getTime() < minMonth.getTime();
-        prevBtn.style.opacity = prevBtn.disabled ? "0.35" : "1";
-        prevBtn.style.cursor = prevBtn.disabled ? "not-allowed" : "pointer";
 
-        if (!selectedLine.textContent) {
-          selectedLine.textContent = ""; // keep minimal, no extra text
-        }
+        updateRightPanel();
       }
 
       prevBtn.addEventListener("click", () => {
@@ -365,6 +463,23 @@
 
       nextBtn.addEventListener("click", () => {
         view.setMonth(view.getMonth() + 1);
+        render();
+      });
+
+      requestForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        if (!selected) return;
+
+        const name = document.getElementById("name").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const phone = document.getElementById("phone").value.trim();
+        if (!name || !email || !phone) return;
+
+        statusLine.textContent = "Request received.";
+        requestForm.reset();
+        requestBtn.disabled = true;
+        selected = null;
+        pickedLine.textContent = "";
         render();
       });
 
