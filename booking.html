@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Serap Calgan — Book</title>
+  <title>Serap Calgan — Booking</title>
 
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -13,9 +13,13 @@
       background: #f3f1ec;
       color: #302212;
       line-height: 1.6;
+
+      /* KEY PART */
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
-    /* HEADER — matches home scale */
     header {
       text-align: center;
       padding: 1.6rem 2rem 0.8rem;
@@ -37,55 +41,42 @@
       opacity: 0.8;
     }
 
-    /* MAIN CONTENT */
+    /* MAIN takes flexible space but doesn't push footer */
     main {
-      max-width: 900px;
+      max-width: 520px;
       margin: 0 auto;
-      padding: 1rem 2rem 3rem;
+      padding: 1rem 2rem 0;
+      flex: 1; /* this keeps footer position consistent */
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
     }
 
-    .section {
+    .calendar {
+      width: 100%;
       border-top: 1px solid rgba(48,34,18,0.15);
       border-bottom: 1px solid rgba(48,34,18,0.15);
       padding: 1.2rem 0;
     }
 
-    .label {
-      font-size: 0.72rem;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      opacity: 0.8;
-      margin-bottom: 0.7rem;
-    }
-
-    .note {
-      max-width: 60ch;
-      font-size: 0.95rem;
-      opacity: 0.9;
-      margin-bottom: 1.1rem;
-    }
-
-    /* EMBED PLACEHOLDER */
-    .embed {
+    input[type="date"] {
       width: 100%;
-      min-height: 600px;
-      background: rgba(48,34,18,0.04);
-      border: 1px solid rgba(48,34,18,0.12);
+      font-size: 1rem;
+      font-family: inherit;
+      color: #302212;
+      background: transparent;
+      border: 1px solid rgba(48,34,18,0.25);
       border-radius: 10px;
-      display: grid;
-      place-items: center;
-      padding: 1rem;
+      padding: 0.75rem 0.85rem;
     }
 
-    .embed p {
-      max-width: 56ch;
-      text-align: center;
-      font-size: 0.9rem;
-      opacity: 0.85;
+    input[type="date"]:focus {
+      outline: none;
+      border-color: rgba(48,34,18,0.6);
     }
 
     footer {
-      padding: 1.2rem 2rem 2rem;
+      padding: 1.5rem 2rem 2rem;
       text-align: center;
       font-size: 0.85rem;
       color: rgba(48,34,18,0.7);
@@ -96,24 +87,16 @@
 <body>
 
   <header>
-    <!-- Clicking title returns home -->
-    <h1><a href="index.html">Serap Calgan</a></h1>
+    <h1><a href="/index.html">Serap Calgan</a></h1>
   </header>
 
   <main>
-    <section class="section">
-      <div class="label">Appointments</div>
-      <p class="note">
-        Select a time that works for you. If you don’t see availability, reach out directly and we’ll find a slot.
-      </p>
-
-      <!-- Replace this with your booking platform embed -->
-      <div class="embed">
-        <p>
-          Booking calendar will appear here.<br><br>
-          Paste your booking service embed code into this section when ready.
-        </p>
-      </div>
+    <section class="calendar">
+      <input
+        type="date"
+        min="2026-01-20"
+        aria-label="Select appointment date"
+      />
     </section>
   </main>
 
