@@ -15,14 +15,14 @@
       line-height: 1.6;
     }
 
-    /* HERO */
+    /* HERO: tighter so more content is visible without scrolling */
     header {
       text-align: center;
-      padding: clamp(3rem, 7vw, 5rem) 2rem 1.75rem;
+      padding: clamp(1.75rem, 4vw, 3rem) 2rem 1rem;
     }
 
     h1 {
-      font-size: clamp(2.2rem, 4.5vw, 3.1rem);
+      font-size: clamp(1.9rem, 3.5vw, 2.6rem);
       font-weight: 800;
       letter-spacing: 0.08em;
       text-transform: uppercase;
@@ -30,14 +30,14 @@
 
     .book {
       display: inline-block;
-      margin-top: 1.4rem;
-      font-size: 0.95rem;
+      margin-top: 1rem;
+      font-size: 0.9rem;
       letter-spacing: 0.22em;
       text-transform: uppercase;
       text-decoration: none;
       color: #000;
       border: 1px solid #000;
-      padding: 0.85rem 1.4rem;
+      padding: 0.7rem 1.2rem;
       transition: background 0.15s ease, color 0.15s ease;
     }
 
@@ -46,28 +46,28 @@
       color: #fff;
     }
 
-    /* GALLERY AREA */
+    /* PAGE WIDTH + GALLERY SPACING */
     main {
-      max-width: 1300px;
+      max-width: 1200px;
       margin: 0 auto;
-      padding: 0 clamp(1.25rem, 4vw, 3rem) 4.5rem;
+      padding: 0 clamp(1.25rem, 3vw, 2.5rem) 3rem;
     }
 
     .gallery {
-      margin-top: clamp(1.75rem, 4vw, 2.75rem);
+      margin-top: clamp(1rem, 2.5vw, 1.75rem);
     }
 
     .grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: clamp(1.25rem, 2.5vw, 2.25rem);
+      gap: clamp(0.9rem, 1.8vw, 1.5rem);
       align-items: start;
     }
 
-    /* Big rounded “photo cards” like your screenshot */
+    /* Smaller “cards” */
     figure {
       margin: 0;
-      border-radius: 18px;
+      border-radius: 16px;
       overflow: hidden;
       background: #f4f4f4;
       border: 1px solid #ededed;
@@ -75,29 +75,31 @@
 
     figure img {
       width: 100%;
-      height: 100%;
       display: block;
       object-fit: cover;
 
-      /* Controls the “size” feel. Taller = more like your screenshot */
-      aspect-ratio: 4 / 5;
+      /* This controls how big the images feel.
+         Smaller than before so you see more above the fold. */
+      aspect-ratio: 5 / 4; /* more landscape-ish, reduces height */
+      max-height: 320px;   /* prevents huge cards on large screens */
     }
 
     /* Responsive */
     @media (max-width: 960px) {
       .grid { grid-template-columns: repeat(2, 1fr); }
-      figure img { aspect-ratio: 3 / 4; }
+      figure img { max-height: 300px; }
     }
 
     @media (max-width: 640px) {
-      header { padding: 2.75rem 1.25rem 1.25rem; }
-      main { padding: 0 1.25rem 3.5rem; }
+      header { padding: 1.5rem 1.25rem 0.75rem; }
+      main { padding: 0 1.25rem 2.5rem; }
       .grid { grid-template-columns: 1fr; }
-      figure { border-radius: 16px; }
+      figure { border-radius: 14px; }
+      figure img { aspect-ratio: 4 / 3; max-height: none; }
     }
 
     footer {
-      padding: 2rem;
+      padding: 1.5rem 2rem 2rem;
       text-align: center;
       font-size: 0.9rem;
       color: #555;
@@ -109,7 +111,7 @@
   <header>
     <h1>Serap Calgan</h1>
 
-    <!-- Replace with real booking link when ready -->
+    <!-- Replace with your real booking link when ready -->
     <a class="book" href="https://example.com/booking" target="_blank" rel="noopener noreferrer">
       BOOK
     </a>
