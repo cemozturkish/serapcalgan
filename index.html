@@ -2,152 +2,64 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Serap Calgan</title>
-
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
-      background: #f3f1ec;
-      color: #302212;
-      line-height: 1.6;
-      overflow-x: hidden;
-    }
-
-    /* HERO */
-    header {
-      text-align: center;
-      padding: 1.6rem 2rem 0.8rem;
-    }
-
-    h1 {
-      font-size: clamp(1.7rem, 3vw, 2.3rem);
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .book {
-      display: inline-block;
-      margin-top: 0.55rem;
-      font-size: 0.78rem;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      text-decoration: none;
-      color: #302212;
-      border: 1px solid #302212;
-      padding: 0.5rem 0.95rem;
-      transition: background 0.15s ease, color 0.15s ease;
-    }
-
-    .book:hover {
-      background: #302212;
-      color: #f3f1ec;
-    }
-
-    /* FULL-BLEED GALLERY */
-    .gallery {
-      width: 100vw;
-      margin-left: calc(50% - 50vw);
-      margin-top: 1.2rem;
-    }
-
-    .carousel {
-      overflow: hidden;
-      background: transparent;
-      border-top: 1px solid rgba(48,34,18,0.15);
-      border-bottom: 1px solid rgba(48,34,18,0.15);
-      padding: 1rem 0;
-    }
-
-    .marquee {
-      display: flex;
-      width: max-content;
-      animation: marquee 26s linear infinite;
-    }
-
-    .carousel:hover .marquee {
-      animation-play-state: paused;
-    }
-
-    .track {
-      display: flex;
-      gap: 1.1rem;
-      padding-right: 1.1rem;
-      align-items: center;
-    }
-
-    /* Images always fit vertically, natural width */
-    .item {
-      height: 360px;
-      flex: 0 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-
-    .item img {
-      height: 100%;
-      width: auto;
-      display: block;
-    }
-
-    @keyframes marquee {
-      from { transform: translateX(0); }
-      to   { transform: translateX(-50%); }
-    }
-
-    footer {
-      padding: 1.5rem 2rem 2rem;
-      text-align: center;
-      font-size: 0.85rem;
-      color: rgba(48,34,18,0.7);
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .marquee { animation: none; }
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#02040c" />
+  <meta name="robots" content="noindex" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>✦</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2302040c'/%3E%3Cpath d='M16 4c1 7 5 11 12 12-7 1-11 5-12 12-1-7-5-11-12-12 7-1 11-5 12-12z' fill='%23ffe9c4'/%3E%3C/svg%3E" />
+  <link rel="preload" href="fonts/cormorant-garamond-latin-400-italic.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="fonts/cormorant-garamond-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="css/style.css" />
 </head>
-
 <body>
+  <canvas id="sky" aria-hidden="true"></canvas>
+  <canvas id="labels" aria-hidden="true"></canvas>
+  <div id="veil"></div>
 
-  <header>
-    <h1>Serap Calgan</h1>
-    <!-- Updated label + route -->
-    <a class="book" href="/booking">RANDEVU AL</a>
-  </header>
+  <header id="top"><span id="clock"></span></header>
+  <button id="skip" type="button" hidden></button>
 
-  <section class="gallery" aria-label="Gallery">
-    <div class="carousel">
-      <div class="marquee">
+  <p id="caption" role="status" aria-live="polite"></p>
 
-        <!-- Track A -->
-        <div class="track">
-          <div class="item"><img src="assets/hair1.jpg" alt=""></div>
-          <div class="item"><img src="assets/hair2.jpg" alt=""></div>
-          <div class="item"><img src="assets/hair3.jpg" alt=""></div>
-          <div class="item"><img src="assets/hair4.jpg" alt=""></div>
-        </div>
-
-        <!-- Track B (duplicate) -->
-        <div class="track">
-          <div class="item"><img src="assets/hair1.jpg" alt=""></div>
-          <div class="item"><img src="assets/hair2.jpg" alt=""></div>
-          <div class="item"><img src="assets/hair3.jpg" alt=""></div>
-          <div class="item"><img src="assets/hair4.jpg" alt=""></div>
-        </div>
-
-      </div>
-    </div>
+  <section id="intro">
+    <div class="intro-star" aria-hidden="true"></div>
+    <p class="intro-date" id="introDate"></p>
+    <p class="intro-place" id="introPlace"></p>
+    <button id="begin" type="button" disabled></button>
   </section>
 
-  <footer>
-    © 1989 Serap Kuaför
+  <aside id="card" hidden>
+    <h2 id="cardTitle"></h2>
+    <p id="cardSub"></p>
+    <p id="cardFact"></p>
+  </aside>
+
+  <footer id="bar" hidden>
+    <div class="time-row">
+      <div id="ticks"></div>
+      <input id="time" type="range" min="0" max="1800" step="1" value="1320" aria-label="Time" />
+    </div>
+    <div class="buttons">
+      <button id="btnLines" type="button" aria-pressed="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17l5-9 6 4 5-7" /><circle cx="4" cy="17" r="1.6" /><circle cx="9" cy="8" r="1.6" /><circle cx="15" cy="12" r="1.6" /><circle cx="20" cy="5" r="1.6" /></svg>
+        <span></span>
+      </button>
+      <button id="btnSound" type="button" aria-pressed="true">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h3l5 4V6L7 10H4z" /><path class="waves" d="M15.5 9a4 4 0 010 6M18 6.5a7.5 7.5 0 010 11" /></svg>
+        <span></span>
+      </button>
+      <button id="btnReplay" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12a7 7 0 107-7H8" /><path d="M11 2L8 5l3 3" /></svg>
+        <span></span>
+      </button>
+    </div>
   </footer>
 
+  <noscript><p class="noscript">Happy Birthday ✦</p></noscript>
+
+  <script src="vendor/astronomy.browser.min.js"></script>
+  <script type="module" src="js/main.js"></script>
 </body>
 </html>
