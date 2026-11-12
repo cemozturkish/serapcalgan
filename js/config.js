@@ -17,6 +17,11 @@ export const CONFIG = {
     time: '08:55', // local time of birth, or null if unknown
   },
 
+  // Recorded narration. null = captions only. Once the recordings are in
+  // voice/<lang>/01.m4a … 16.m4a, set e.g. { lang: 'tr', ext: 'm4a' }; the
+  // site is then shown in that language so that voice and captions match.
+  voice: null,
+
   // 'auto' follows the phone's language (Turkish phone → Turkish), or force 'en' / 'tr'.
   lang: 'auto',
 
@@ -36,6 +41,17 @@ const q = new URLSearchParams(location.search);
 if (q.get('name')) CONFIG.name = q.get('name').slice(0, 24);
 if (q.get('lang')) CONFIG.lang = q.get('lang');
 if (q.has('solo')) CONFIG.from = null;
+if (/^(en|tr)\.\w+$/.test(q.get('voice') || '')) {
+  const [lang, ext] = q.get('voice').split('.');
+  CONFIG.voice = { lang, ext };
+}
+if (CONFIG.voice) CONFIG.lang = CONFIG.voice.lang;
+
+// The narrated lines, in the order they are numbered in voice/<lang>/.
+export const VOICE_LINES = [
+  'p_bornAt', 'p_night', 'p_alone', 'p_until', 's_real', 's_storm1', 's_storm2', 's_sunrise',
+  's_birthDay', 's_birthDay2', 's_birthDay3', 's_moon', 's_saturn', 's_all', 'happy', 's_after',
+];
 if (/^\d{1,2}:\d{2}$/.test(q.get('t') || '')) CONFIG.birthTime = q.get('t');
 
 export const LANG =
