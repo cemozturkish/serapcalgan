@@ -9,6 +9,14 @@ export const CONFIG = {
   // When set, the story pauses at that exact minute.
   birthTime: '12:01',
 
+  // Who this is from. Their own night sky opens the story, and the days are
+  // counted from their birthday to hers. Set to null to leave this part out.
+  from: {
+    name: 'Cem',
+    date: { year: 2002, month: 3, day: 11 },
+    hour: 21, // which hour of that night to show (time of birth unknown)
+  },
+
   // 'auto' follows the phone's language (Turkish phone → Turkish), or force 'en' / 'tr'.
   lang: 'auto',
 
@@ -27,6 +35,7 @@ export const CONFIG = {
 const q = new URLSearchParams(location.search);
 if (q.get('name')) CONFIG.name = q.get('name').slice(0, 24);
 if (q.get('lang')) CONFIG.lang = q.get('lang');
+if (q.has('solo')) CONFIG.from = null;
 if (/^\d{1,2}:\d{2}$/.test(q.get('t') || '')) CONFIG.birthTime = q.get('t');
 
 export const LANG =
@@ -44,6 +53,13 @@ const STRINGS = {
     introTap: 'tap to look up',
     loading: 'gathering the stars…',
     skip: 'skip',
+    p_date: (d, month, y) => `${d} ${month} ${y}.`,
+    p_born: (n) => `${n} was born under this sky. There was no moon that night.`,
+    p_alone: (n, days) => `And for ${days} days, ${n} was alone in this world without you.`,
+    p_until: 'Until 19 November 2002.',
+    p_count: 'days without you',
+    p_too: (n) => `So has ${n}.`,
+    monthsLong: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
     s_place: 'Istanbul. 19 November 2002.',
     s_real: 'This is the real sky of that day — every star exactly where it was.',
     s_birthNight: (t) => `At ${t}, under these stars, you arrived.`,
@@ -95,6 +111,13 @@ const STRINGS = {
     introTap: 'gökyüzüne bakmak için dokun',
     loading: 'yıldızlar toplanıyor…',
     skip: 'geç',
+    p_date: (d, month, y) => `${d} ${month} ${y}.`,
+    p_born: (n) => `${n} bu gökyüzünün altında doğdu. O gece ay yoktu.`,
+    p_alone: (n, days) => `Ve ${days} gün boyunca ${n} bu dünyada sensiz, yapayalnızdı.`,
+    p_until: 'Ta ki 19 Kasım 2002’ye kadar.',
+    p_count: 'sensiz gün',
+    p_too: (n) => `${n} de öyle.`,
+    monthsLong: ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'],
     s_place: 'İstanbul. 19 Kasım 2002.',
     s_real: 'Bu, o günün gerçek gökyüzü — her yıldız tam olduğu yerde.',
     s_birthNight: (t) => `Saat ${t}. Bu yıldızların altında sen geldin.`,

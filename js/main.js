@@ -27,7 +27,7 @@ const labelCanvas = $('labels');
 const lctx = labelCanvas.getContext('2d');
 const el = {
   veil: $('veil'), intro: $('intro'), begin: $('begin'), top: $('top'), clock: $('clock'),
-  caption: $('caption'), skip: $('skip'), card: $('card'), bar: $('bar'), time: $('time'),
+  caption: $('caption'), skip: $('skip'), count: $('count'), countN: $('countN'), card: $('card'), bar: $('bar'), time: $('time'),
   ticks: $('ticks'), btnLines: $('btnLines'), btnSound: $('btnSound'), btnReplay: $('btnReplay'),
 };
 
@@ -36,6 +36,7 @@ $('introDate').textContent = T.introDate;
 $('introPlace').textContent = T.introPlace;
 el.begin.textContent = T.loading;
 el.skip.textContent = T.skip;
+$('countLabel').textContent = T.p_count;
 el.btnLines.querySelector('span').textContent = T.constellation;
 el.btnSound.querySelector('span').textContent = T.sound;
 el.btnReplay.querySelector('span').textContent = T.replay;
@@ -43,6 +44,12 @@ el.btnReplay.querySelector('span').textContent = T.replay;
 // ── state ──────────────────────────────────────────────────────────────────
 const BIRTH = CONFIG.birthTime ? astro.parseClock(CONFIG.birthTime) : null;
 const STORM_START = 5 * 60 + 14;
+// the person this is from: minutes (relative to her midnight) of their night sky
+const FROM = CONFIG.from;
+const FROM_DAYS = FROM
+  ? Math.round((Date.UTC(CONFIG.date.year, CONFIG.date.month - 1, CONFIG.date.day) - Date.UTC(FROM.date.year, FROM.date.month - 1, FROM.date.day)) / 864e5)
+  : 0;
+const FROM_START = -FROM_DAYS * 1440 + (FROM ? FROM.hour : 0) * 60;
 const EVENING = BIRTH !== null && BIRTH >= 17 * 60 + 45 ? BIRTH : 22 * 60;
 
 const cam = { az: 143, alt: 12, fov: 108 };
@@ -56,6 +63,8 @@ const S = {
   reveal: 0,         // let the stars shine through daylight
   party: 0,          // celebratory meteors per second during the finale
   storm: 0,          // extra Leonids per second while the story tells of the storm
+  lapse: null,       // while the days race by: { from, days, rest, u }
+  dateOnly: false,   // show the date without the hour
   linesWanted: false,
   selected: null,
 };
@@ -356,7 +365,8 @@ function gatherStars() {
 // ── labels ─────────────────────────────────────────────────────────────────
 const dateLabel = (minutes) => {
   const d = new Date(astro.fromMinutes(minutes) + CONFIG.utcOffsetHours * 3600e3);
-  return `${d.getUTCDate()} ${T.months[d.getUTCMonth()]} ${d.getUTCFullYear()}  ·  ${astro.clock(minutes)}`;
+  const date = `${d.getUTCDate()} ${T.months[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
+  return S.dateOnly ? date : `${date}  ·  ${astro.clock(minutes)}`;
 };
 
 function selectedVec() {
@@ -492,7 +502,15 @@ function frame(now) {
   const dt = Math.min((now - lastT) / 1000, 0.1);
   lastT = now;
   runTweens(now);
-  if (S.flow) S.minutes = clamp(S.minutes + S.flow * dt, 0, 1800);
+  if (S.flow) S.minutes = Math.min(S.minutes + S.flow * dt, 1800);
+  if (S.lapse) {
+    // step through whole days, always at night, so the sky wheels through the
+    // seasons without flashing between day and night
+    const L = S.lapse;
+    const day = Math.round(L.days * L.u);
+    S.minutes = L.from + day * 1440 + L.rest * L.u;
+    el.countN.textContent = day + 1;
+  }
   inertia(dt);
 
   const key = Math.round(S.minutes * 600);
@@ -563,7 +581,7 @@ function frame(now) {
     sunV: astro.apply(M, sky.sun.vec),
     moonV: astro.apply(M, sky.moon.vec),
     milky: night * (1 - 0.3 * moonUp) * (1 - 0.6 * S.morph),
-    moonGlow: moonUp * (1 - day) * (1 - 0.5 * S.morph),
+    moonGlow: moonUp * (1 - day) * (1 - 0.5 * S.morph) * (S.lapse ? 0.45 : 1),
     sunDisc: smooth(-1.2, 0.2, sunAlt),
     magLimit,
     starAlpha,
@@ -786,16 +804,52 @@ async function story() {
   const bornByDay = B !== null && B >= 6 * 60 + 40 && B < 17 * 60 + 45;
   const bornAtNight = B !== null && B >= 17 * 60 + 45;
 
-  S.minutes = bornBeforeStorm ? B : STORM_START;
-  el.veil.classList.add('clear');
-  el.top.classList.add('on');
+  const arrival = bornBeforeStorm ? B : STORM_START;
+  endLapse();
 
-  // 1 ─ the place, the date
-  await sleep(1400, t);
-  say(T.s_place, 3600);
-  camTo({ alt: storyAlt() }, 11000);
-  S.flow = bornBeforeStorm ? 0.5 : 1.3;
-  await sleep(4700, t);
+  if (FROM) {
+    // 0 ─ the sky of the one who was already here, and the days in between
+    S.minutes = FROM_START;
+    S.dateOnly = true;
+    cam.az = 246;
+    el.veil.classList.add('clear');
+    el.top.classList.add('on');
+    await sleep(1400, t);
+    say(T.p_date(FROM.date.day, T.monthsLong[FROM.date.month - 1], FROM.date.year), 3000);
+    camTo({ alt: storyAlt() }, 9000);
+    S.flow = 1;
+    await sleep(4100, t);
+    say(T.p_born(FROM.name), 5000);
+    tween(S, { labels: 1 }, 2500);
+    await sleep(6200, t);
+    say(T.p_alone(FROM.name, FROM_DAYS), 10200);
+    tween(S, { labels: 0 }, 1500);
+    await sleep(1600, t);
+    S.flow = 0;
+    const span = arrival - S.minutes;
+    const days = Math.floor(span / 1440);
+    S.lapse = { from: S.minutes, days, rest: span - days * 1440, u: 0 };
+    el.count.classList.add('on');
+    tween(S.lapse, { u: 1 }, 9000, easeInOut);
+    camTo({ az: 143 }, 9000);
+    await sleep(9100, t);
+    endLapse();
+    S.minutes = arrival;
+    S.flow = bornBeforeStorm ? 0.5 : 1.3;
+    say(T.p_until, 3400);
+    await sleep(4500, t);
+  } else {
+    S.minutes = arrival;
+    el.veil.classList.add('clear');
+    el.top.classList.add('on');
+
+    // 1 ─ the place, the date
+    await sleep(1400, t);
+    say(T.s_place, 3600);
+    camTo({ alt: storyAlt() }, 11000);
+    S.flow = bornBeforeStorm ? 0.5 : 1.3;
+    await sleep(4700, t);
+  }
   say(T.s_real, 4400);
   tween(S, { lines: 1 }, 2500);
   tween(S, { labels: 1 }, 2500);
@@ -877,8 +931,16 @@ async function story() {
   await finale(t);
 }
 
+function endLapse() {
+  S.lapse = null;
+  S.dateOnly = false;
+  el.count.classList.remove('on');
+  skyCacheKey = null;
+}
+
 async function finale(t) {
   S.mode = 'finale';
+  endLapse();
   hush();
   hideCard();
   const aim = eveningAim();
@@ -900,7 +962,7 @@ async function finale(t) {
   const tune = audio.happyBirthday(0.52) * 1000;
   document.title = CONFIG.name ? `${T.happy}, ${CONFIG.name} ✦` : `${T.happy} ✦`;
   await sleep(6200, t);
-  say(T.s_after, Math.max(tune - 4500, 6000), 'small');
+  say(FROM ? `${T.s_after}\n${T.p_too(FROM.name)}` : T.s_after, Math.max(tune - 4500, 6000), 'small');
   await sleep(Math.max(tune - 5200, 7000) + 3500, t);
   S.party = 0;
   tween(S, { morph: 0 }, 4200, (u) => u);
@@ -911,6 +973,7 @@ async function finale(t) {
 function explore() {
   token++;
   S.mode = 'explore';
+  endLapse();
   el.skip.hidden = true;
   S.flow = 0;
   S.party = 0;

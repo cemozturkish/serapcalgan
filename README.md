@@ -11,12 +11,13 @@ Everything personal is at the top of [`js/config.js`](js/config.js):
 | ----------- | ------------------------------------------------------------------------- |
 | `name`      | Her name, written in stars at the end. Leave empty for just the greeting. |
 | `birthTime` | Local time of birth (`'12:01'`). The story pauses at that minute.         |
+| `from`      | Who it is from: name and birthday. Their night sky opens the story and the days between the two birthdays are counted. `null` leaves it out. |
 | `lang`      | `'auto'` (Turkish on a Turkish phone, otherwise English), `'en'` or `'tr'` |
 
 All the on-screen text, in both languages, is in the same file.
 
 To preview without editing anything, add parameters to the address:
-`?name=Ada&lang=tr&t=21:30`
+`?name=Ada&lang=tr&t=21:30` (add `&solo` to preview without the opening part)
 
 ## What is real
 
