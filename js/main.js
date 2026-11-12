@@ -1,4 +1,4 @@
-import { CONFIG, T, LANG } from './config.js';
+import { CONFIG, T, LANG, VOICE_LINES } from './config.js';
 import { Renderer, MAX_METEOR_VERTS } from './renderer.js';
 import * as astro from './astro.js';
 import { paintSkyline } from './skyline.js';
@@ -758,7 +758,18 @@ function hideCard() {
 
 // ── captions ───────────────────────────────────────────────────────────────
 let captionTimer = 0;
-function say(text, ms, cls = '') {
+let voiceUntil = 0; // when the line being spoken ends
+function stopVoice() {
+  audio.stopVoice();
+  voiceUntil = 0;
+}
+function say(text, ms, cls = '', line = null) {
+  // with a recording, the caption stays up for as long as the voice needs
+  const spoken = line ? audio.speak(line) * 1000 : 0;
+  if (spoken) {
+    voiceUntil = performance.now() + spoken + 450;
+    ms = Math.max(ms, spoken + 300);
+  }
   clearTimeout(captionTimer);
   el.caption.classList.remove('on');
   captionTimer = setTimeout(() => {
@@ -777,8 +788,16 @@ function hush() {
 // ── the story ──────────────────────────────────────────────────────────────
 let token = 0;
 const CANCEL = Symbol('cancel');
+// a pause in the story; it never ends while a recorded line is still being spoken
 const sleep = (ms, t) =>
-  new Promise((res, rej) => setTimeout(() => (t === token ? res() : rej(CANCEL)), ms));
+  new Promise((res, rej) => {
+    const done = () => {
+      if (t !== token) return rej(CANCEL);
+      const left = voiceUntil - performance.now();
+      left > 0 ? setTimeout(done, left) : res();
+    };
+    setTimeout(done, ms);
+  });
 
 /** Where to point the camera in the evening: between Saturn and the Moon. */
 function eveningAim() {
@@ -807,6 +826,7 @@ async function story() {
 
   const arrival = bornBeforeStorm ? B : STORM_START;
   endLapse();
+  stopVoice();
 
   if (FROM) {
     // 0 ─ the sky of the one who was already here, and the days in between
@@ -828,7 +848,7 @@ async function story() {
       tween(S, { labels: 1 }, 2500);
       await sleep(6200, t);
     } else {
-      say(T.p_bornAt(FROM.name, FROM.time, day, month, year), 5000);
+      say(T.p_bornAt(FROM.name, FROM.time, day, month, year), 5000, '', 'p_bornAt');
       await sleep(6000, t);
       if (byDay && FROM_NIGHT > FROM_START) {
         // let that first day run on into its night
@@ -838,12 +858,12 @@ async function story() {
         await sleep(3000, t);
       }
       tween(S, { labels: 1 }, 2500);
-      if (astro.skyAt(astro.fromMinutes(Math.max(FROM_START, FROM_NIGHT))).moon.alt < 0) say(T.p_night, 4400);
+      if (astro.skyAt(astro.fromMinutes(Math.max(FROM_START, FROM_NIGHT))).moon.alt < 0) say(T.p_night, 4400, '', 'p_night');
       await sleep(5600, t);
       S.flow = 0;
     }
     S.dateOnly = true;
-    say(T.p_alone(FROM.name, FROM_DAYS), 10200);
+    say(T.p_alone(FROM.name, FROM_DAYS), 10200, '', 'p_alone');
     tween(S, { labels: 0 }, 1500);
     await sleep(1600, t);
     S.flow = 0;
@@ -857,7 +877,7 @@ async function story() {
     endLapse();
     S.minutes = arrival;
     S.flow = bornBeforeStorm ? 0.5 : 1.3;
-    say(T.p_until, 3400);
+    say(T.p_until, 3400, '', 'p_until');
     await sleep(4500, t);
   } else {
     S.minutes = arrival;
@@ -871,7 +891,7 @@ async function story() {
     S.flow = bornBeforeStorm ? 0.5 : 1.3;
     await sleep(4700, t);
   }
-  say(T.s_real, 4400);
+  say(T.s_real, 4400, '', 's_real');
   tween(S, { lines: 1 }, 2500);
   tween(S, { labels: 1 }, 2500);
   await sleep(5300, t);
@@ -888,10 +908,10 @@ async function story() {
   // 2 ─ the storm
   tween(S, { lines: 0 }, 2500);
   tween(S, { labels: 0 }, 2500);
-  say(T.s_storm1, 4200);
+  say(T.s_storm1, 4200, '', 's_storm1');
   tween(S, { storm: 1.6 }, 6000);
   await sleep(5400, t);
-  say(T.s_storm2, 6600);
+  say(T.s_storm2, 6600, '', 's_storm2');
   await sleep(7600, t);
   if (bornInStorm) {
     S.flow = 0;
@@ -904,7 +924,7 @@ async function story() {
   S.flow = 0;
   tween(S, { storm: 0 }, 1500);
   const aim = eveningAim();
-  say(T.s_sunrise, 5200);
+  say(T.s_sunrise, 5200, '', 's_sunrise');
   if (bornByDay) {
     const part = (B - S.minutes) / (EVENING - S.minutes);
     tween(S, { minutes: B }, 3000 + 5000 * part, easeInOut);
@@ -912,16 +932,16 @@ async function story() {
     const sun = astro.skyAt(astro.fromMinutes(B)).sun;
     camTo({ az: sun.az - 13, alt: storyAlt() }, 3000 + 5000 * part);
     await sleep(3200 + 5000 * part, t);
-    say(T.s_birthDay(hhmm, sun.alt > 20), 4600);
+    say(T.s_birthDay(hhmm, sun.alt > 20), 4600, '', 's_birthDay');
     await sleep(2400, t);
     tween(S, { reveal: 1 }, 2800);
     await sleep(3200, t);
-    say(T.s_birthDay2, 4800);
+    say(T.s_birthDay2, 4800, '', 's_birthDay2');
     tween(S, { lines: 1, labels: 1 }, 2500);
     await sleep(6000, t);
     // on 19 November the Sun is in Libra, a few degrees from the border of Scorpius
     if (['Lib', 'Sco'].includes(astro.constellationOf(sun))) {
-      say(T.s_birthDay3, 5000);
+      say(T.s_birthDay3, 5000, '', 's_birthDay3');
       await sleep(6200, t);
     }
     tween(S, { reveal: 0, lines: 0, labels: 0 }, 2500);
@@ -935,7 +955,7 @@ async function story() {
   // 4 ─ the night
   S.flow = 0.5;
   tween(S, { labels: 1 }, 2500);
-  say(T.s_moon, 4400);
+  say(T.s_moon, 4400, '', 's_moon');
   await sleep(5400, t);
   if (bornAtNight) {
     say(T.s_birthNight(hhmm), 5200);
@@ -943,10 +963,10 @@ async function story() {
   }
   if (aim.saturn) {
     tween(S, { lines: 1 }, 2500);
-    say(T.s_saturn, 4400);
+    say(T.s_saturn, 4400, '', 's_saturn');
     await sleep(5400, t);
   }
-  say(T.s_all, 3800);
+  say(T.s_all, 3800, '', 's_all');
   tween(S, { lines: 0 }, 3000);
   await sleep(4300, t);
   await finale(t);
@@ -962,6 +982,7 @@ function endLapse() {
 async function finale(t) {
   S.mode = 'finale';
   endLapse();
+  stopVoice();
   hush();
   hideCard();
   const aim = eveningAim();
@@ -982,8 +1003,10 @@ async function finale(t) {
   S.party = 0.5;
   const tune = audio.happyBirthday(0.52) * 1000;
   document.title = CONFIG.name ? `${T.happy}, ${CONFIG.name} ✦` : `${T.happy} ✦`;
-  await sleep(6200, t);
-  say(FROM ? `${T.s_after}\n${T.p_too(FROM.name)}` : T.s_after, Math.max(tune - 4500, 6000), 'small');
+  await sleep(5400, t);
+  voiceUntil = performance.now() + audio.speak('happy') * 1000;
+  await sleep(800, t);
+  say(FROM ? `${T.s_after}\n${T.p_too(FROM.name)}` : T.s_after, Math.max(tune - 4500, 6000), 'small', 's_after');
   await sleep(Math.max(tune - 5200, 7000) + 3500, t);
   S.party = 0;
   tween(S, { morph: 0 }, 4200, (u) => u);
@@ -995,6 +1018,7 @@ function explore() {
   token++;
   S.mode = 'explore';
   endLapse();
+  stopVoice();
   el.skip.hidden = true;
   S.flow = 0;
   S.party = 0;
@@ -1124,6 +1148,7 @@ async function boot() {
   }));
   renderer.setSkyline(paintSkyline());
   buildTicks();
+  if (CONFIG.voice) audio.loadVoice(CONFIG.voice.lang, CONFIG.voice.ext, VOICE_LINES);
 
   sky = astro.skyAt(astro.fromMinutes(S.minutes));
   resize();

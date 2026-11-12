@@ -12,6 +12,7 @@ Everything personal is at the top of [`js/config.js`](js/config.js):
 | `name`      | Her name, written in stars at the end. Leave empty for just the greeting. |
 | `birthTime` | Local time of birth (`'12:01'`). The story pauses at that minute.         |
 | `from`      | Who it is from: name, birthday and time of birth. Their sky opens the story and the days between the two birthdays are counted. `null` leaves it out. |
+| `voice`     | Recorded narration: `{ lang: 'tr', ext: 'm4a' }` once the recordings are in `voice/tr/`. The script is in [`voice/SCRIPT.md`](voice/SCRIPT.md). |
 | `lang`      | `'auto'` (Turkish on a Turkish phone, otherwise English), `'en'` or `'tr'` |
 
 All the on-screen text, in both languages, is in the same file.

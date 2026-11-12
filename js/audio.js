@@ -66,7 +66,62 @@ export function startAudio() {
     }
   }
   pad.gain.linearRampToValueAtTime(0.11, ctx.currentTime + 6);
+  decodeVoice();
 }
+
+// ── recorded narration ──
+const raw = {};   // line → encoded file, as fetched
+const clips = {}; // line → decoded audio
+function decodeVoice() {
+  if (!ctx) return;
+  for (const key of Object.keys(raw)) {
+    const data = raw[key];
+    delete raw[key];
+    ctx.decodeAudioData(data, (buf) => { clips[key] = buf; }, () => {});
+  }
+}
+/** Fetches voice/<lang>/01.<ext>, 02.<ext>, … for the given lines. Missing files are simply skipped. */
+export async function loadVoice(lang, ext, lines) {
+  await Promise.all(lines.map(async (key, i) => {
+    try {
+      const r = await fetch(`voice/${lang}/${String(i + 1).padStart(2, '0')}.${ext}`);
+      if (r.ok) raw[key] = await r.arrayBuffer();
+    } catch (e) { /* no recording for this line */ }
+  }));
+  decodeVoice();
+}
+/** Plays the recording for a line, if there is one. Returns its length in seconds (0 if none). */
+export function speak(key) {
+  const buf = clips[key];
+  if (!ctx || !buf) return 0;
+  const t = ctx.currentTime;
+  const src = ctx.createBufferSource();
+  src.buffer = buf;
+  const dry = ctx.createGain();
+  dry.gain.value = 1;
+  src.connect(dry);
+  dry.connect(master);
+  const air = ctx.createGain();
+  air.gain.value = 0.07;
+  src.connect(air);
+  air.connect(wet);
+  // let the music step back while the voice is speaking
+  pad.gain.cancelScheduledValues(t);
+  pad.gain.setTargetAtTime(0.045, t, 0.25);
+  pad.gain.setTargetAtTime(0.11, t + buf.duration + 0.3, 0.8);
+  src.start(t + 0.05);
+  speaking = src;
+  return buf.duration;
+}
+let speaking = null;
+/** Cuts off a line that is still being spoken (when the story is skipped). */
+export function stopVoice() {
+  try {
+    if (speaking) speaking.stop();
+  } catch (e) { /* already finished */ }
+  speaking = null;
+}
+export const hasVoice = () => Object.keys(clips).length + Object.keys(raw).length > 0;
 
 export function setMuted(m) {
   muted = m;
@@ -113,10 +168,11 @@ const TUNE = [
 /** Plays the tune; returns its length in seconds. */
 export function happyBirthday(beat = 0.5) {
   let t = 0.1;
+  const k = hasVoice() ? 0.6 : 1; // quieter under a spoken greeting
   for (const [semi, beats] of TUNE) {
     const f = 880 * Math.pow(2, semi / 12);
-    bell(f, t, 0.16, 1.2 + beats * 0.9);
-    if (beats >= 1) bell(f / 2, t, 0.05, 1.6);
+    bell(f, t, 0.16 * k, 1.2 + beats * 0.9);
+    if (beats >= 1) bell(f / 2, t, 0.05 * k, 1.6);
     t += beats * beat;
   }
   return t;
