@@ -49,7 +49,8 @@ const FROM = CONFIG.from;
 const FROM_DAYS = FROM
   ? Math.round((Date.UTC(CONFIG.date.year, CONFIG.date.month - 1, CONFIG.date.day) - Date.UTC(FROM.date.year, FROM.date.month - 1, FROM.date.day)) / 864e5)
   : 0;
-const FROM_START = -FROM_DAYS * 1440 + (FROM ? FROM.hour : 0) * 60;
+const FROM_NIGHT = -FROM_DAYS * 1440 + 21 * 60; // 21:00 on the evening of that day
+const FROM_START = FROM && FROM.time ? -FROM_DAYS * 1440 + astro.parseClock(FROM.time) : FROM_NIGHT;
 const EVENING = BIRTH !== null && BIRTH >= 17 * 60 + 45 ? BIRTH : 22 * 60;
 
 const cam = { az: 143, alt: 12, fov: 108 };
@@ -564,7 +565,7 @@ function frame(now) {
       y: 1 - (mp.y / H) * 2,
       r: moonRadius() * renderer.dpr,
       light: [dot(L, ex), dot(L, ey), dot(L, ez)],
-      halo: lerp(1, 0.12, day) * (1 - 0.5 * S.morph),
+      halo: (1 - day) * (1 - 0.5 * S.morph),
       pale: day,
     };
   }
@@ -809,19 +810,39 @@ async function story() {
 
   if (FROM) {
     // 0 ─ the sky of the one who was already here, and the days in between
+    const then = astro.skyAt(astro.fromMinutes(FROM_START));
+    const byDay = then.sun.alt > -6;
+    const [day, month, year] = [FROM.date.day, T.monthsLong[FROM.date.month - 1], FROM.date.year];
     S.minutes = FROM_START;
-    S.dateOnly = true;
-    cam.az = 246;
+    S.dateOnly = !FROM.time;
+    cam.az = byDay ? then.sun.az + 12 : 246;
     el.veil.classList.add('clear');
     el.top.classList.add('on');
     await sleep(1400, t);
-    say(T.p_date(FROM.date.day, T.monthsLong[FROM.date.month - 1], FROM.date.year), 3000);
     camTo({ alt: storyAlt() }, 9000);
     S.flow = 1;
-    await sleep(4100, t);
-    say(T.p_born(FROM.name), 5000);
-    tween(S, { labels: 1 }, 2500);
-    await sleep(6200, t);
+    if (!FROM.time) {
+      say(T.p_date(day, month, year), 3000);
+      await sleep(4100, t);
+      say(T.p_born(FROM.name), 5000);
+      tween(S, { labels: 1 }, 2500);
+      await sleep(6200, t);
+    } else {
+      say(T.p_bornAt(FROM.name, FROM.time, day, month, year), 5000);
+      await sleep(6000, t);
+      if (byDay && FROM_NIGHT > FROM_START) {
+        // let that first day run on into its night
+        S.flow = 0;
+        tween(S, { minutes: FROM_NIGHT }, 4400);
+        camTo({ az: 246 }, 4400);
+        await sleep(3000, t);
+      }
+      tween(S, { labels: 1 }, 2500);
+      if (astro.skyAt(astro.fromMinutes(Math.max(FROM_START, FROM_NIGHT))).moon.alt < 0) say(T.p_night, 4400);
+      await sleep(5600, t);
+      S.flow = 0;
+    }
+    S.dateOnly = true;
     say(T.p_alone(FROM.name, FROM_DAYS), 10200);
     tween(S, { labels: 0 }, 1500);
     await sleep(1600, t);

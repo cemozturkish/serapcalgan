@@ -230,7 +230,8 @@ void main() {
   vec3 col = surf * (lit + 0.015) * disc * mix(1.0, 0.75, uPale);
   float halo = uBright * (0.55 * exp(-max(r - 1.0, 0.0) * 1.6) + 0.25 * exp(-max(r - 1.0, 0.0) * 0.45)) * (1.0 - disc);
   halo *= smoothstep(uK, uK * 0.6, r);
-  float a = disc * mix(1.0, 0.8, uPale);
+  // by day the unlit part of the Moon is simply sky, not a dark disc
+  float a = disc * mix(1.0, 0.8 * lit, uPale);
   gl_FragColor = vec4(col + vec3(0.72, 0.80, 1.0) * halo, a);
 }`;
 
