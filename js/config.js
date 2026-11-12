@@ -3,7 +3,7 @@
 // ─────────────────────────────────────────────────────────────────────────
 export const CONFIG = {
   // Her first name, as it should appear written in stars.
-  name: '',
+  name: 'Bihter',
 
   // Local time of birth, "HH:MM" (24h, Istanbul time), or null if unknown.
   // When set, the story pauses at that exact minute.
@@ -14,7 +14,7 @@ export const CONFIG = {
   from: {
     name: 'Cem',
     date: { year: 2002, month: 3, day: 11 },
-    hour: 21, // which hour of that night to show (time of birth unknown)
+    time: '08:55', // local time of birth, or null if unknown
   },
 
   // 'auto' follows the phone's language (Turkish phone → Turkish), or force 'en' / 'tr'.
@@ -55,6 +55,8 @@ const STRINGS = {
     skip: 'skip',
     p_date: (d, month, y) => `${d} ${month} ${y}.`,
     p_born: (n) => `${n} was born under this sky. There was no moon that night.`,
+    p_bornAt: (n, t, d, month, y) => `At ${t} on ${d} ${month} ${y}, ${n} was born.`,
+    p_night: 'That first night, there was no moon.',
     p_alone: (n, days) => `And for ${days} days, ${n} was alone in this world without you.`,
     p_until: 'Until 19 November 2002.',
     p_count: 'days without you',
@@ -113,6 +115,8 @@ const STRINGS = {
     skip: 'geç',
     p_date: (d, month, y) => `${d} ${month} ${y}.`,
     p_born: (n) => `${n} bu gökyüzünün altında doğdu. O gece ay yoktu.`,
+    p_bornAt: (n, t, d, month, y) => `${d} ${month} ${y}, saat ${t}. ${n} doğdu.`,
+    p_night: 'O ilk gecede gökyüzünde ay yoktu.',
     p_alone: (n, days) => `Ve ${days} gün boyunca ${n} bu dünyada sensiz, yapayalnızdı.`,
     p_until: 'Ta ki 19 Kasım 2002’ye kadar.',
     p_count: 'sensiz gün',
